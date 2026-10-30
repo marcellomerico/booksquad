@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Booksquad – Lesen mit Freunden</title>
-<meta name="description" content="Booksquad ist die Community-App für Leserinnen und Leser: dein Bücherregal, Beiträge über Bücher und Lesekreise mit Freunden. Ohne Werbung, ohne Tracking.">
-<meta name="theme-color" content="#7b3140">
+<title>Booksquad – Lesen ist schöner mit deiner Squad</title>
+<meta name="description" content="Booksquad ist die Lese-App für dich und deine Leute: ein Bücherregal wie zu Hause, Lese-Serie und Jahresziel, Lesekreise und Nachrichten. Ohne Werbung, ohne Tracking, Daten in der EU.">
+<meta name="theme-color" content="#201a16">
 <link rel="icon" type="image/png" href="img/icon-64.png">
 <link rel="apple-touch-icon" href="img/icon-180.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://booksquad.de/">
-<meta property="og:title" content="Booksquad – Lesen mit Freunden">
-<meta property="og:description" content="Dein Bücherregal, Beiträge über Bücher und Lesekreise mit Freunden. Bald im App Store und bei Google Play.">
+<meta property="og:title" content="Booksquad – Lesen ist schöner mit deiner Squad">
+<meta property="og:description" content="Dein Bücherregal wie zu Hause, Lese-Serie, Lesekreise und Nachrichten. Bald im App Store und bei Google Play.">
 <meta property="og:image" content="https://booksquad.de/img/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preload" as="image" href="img/01-feed.webp">
+<link rel="preload" as="image" href="img/22-regal.webp">
 <link rel="stylesheet" href="landing.css">
 <script>document.documentElement.classList.add('js')</script>
 <script src="landing.js" defer></script>
@@ -25,10 +25,10 @@
 
 <header class="top">
   <a class="logo" href="#top" aria-label="Booksquad Startseite">
-    <img src="img/icon-64.png" width="32" height="32" alt="">
-    <span>Booksquad</span>
+    <span class="plate">BOOKSQUAD</span>
   </a>
   <nav>
+    <a href="#regal">Regal</a>
     <a href="#funktionen">Funktionen</a>
     <a href="#faq">FAQ</a>
     <a class="btn btn-small" href="#beta">Beta testen</a>
@@ -38,80 +38,118 @@
 <main id="top">
 
 <section class="hero">
-  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="lamp" aria-hidden="true"></div>
   <div class="hero-text">
-    <p class="eyebrow" data-reveal style="--d:0">Die Community-App für Bücher</p>
-    <h1 aria-label="Lesen mit Freunden.">
+    <p class="eyebrow" data-reveal style="--d:0">Die Lese-App für dich und deine Leute</p>
+    <h1 aria-label="Lesen ist schöner mit deiner Squad.">
       <span class="word" aria-hidden="true"><span style="--i:0">Lesen</span></span>
-      <span class="word" aria-hidden="true"><span style="--i:1">mit</span></span>
-      <span class="word" aria-hidden="true"><span style="--i:2" class="accent">Freunden.</span></span>
+      <span class="word" aria-hidden="true"><span style="--i:1">ist</span></span>
+      <span class="word" aria-hidden="true"><span style="--i:2">schöner</span></span>
+      <span class="word" aria-hidden="true"><span style="--i:3">mit</span></span>
+      <span class="word" aria-hidden="true"><span style="--i:4">deiner</span></span>
+      <span class="word" aria-hidden="true"><span style="--i:5" class="accent">Squad.</span></span>
     </h1>
-    <p class="lead" data-reveal style="--d:4">Sieh, was deine Freunde lesen, füll dein eigenes Bücherregal und sprich in Lesekreisen über die Bücher, die dich bewegen.</p>
-    <div class="cta" data-reveal style="--d:5">
+    <p class="lead" data-reveal style="--d:6">Ein Bücherregal wie zu Hause, deine Lese-Serie und dein Jahresziel im Blick, Lesekreise und Nachrichten mit Menschen, die lesen wie du.</p>
+    <div class="cta" data-reveal style="--d:7">
       <a class="btn" href="#beta">Beta-Tester werden</a>
       <a class="btn btn-ghost" href="#teaser"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Video ansehen</a>
     </div>
     <!-- Bei Veröffentlichung: Links auf die Store-Seiten setzen und class="soon" entfernen. -->
-    <div class="stores" aria-label="Downloads" data-reveal style="--d:6">
+    <div class="stores" aria-label="Downloads" data-reveal style="--d:8">
       <span class="store soon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8s-1.8-.8-3-.8C7 7.2 5.6 8.1 4.8 9.5c-1.6 2.8-.4 7 1.2 9.2.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2-1.1 2.8-2.2.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.6-3.6zM14.1 5.6c.6-.8 1.1-1.8 1-2.9-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.8 1 .1 2-.5 2.7-1.3z"/></svg><span><small>Bald im</small>App Store</span></span>
       <span class="store soon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 2.3 13.4 12l-9.8 9.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1zm11 10.9 2.6 2.6-11.3 6.5 8.7-9.1zm0-2.4L5.9 1.7 17.2 8.2l-2.6 2.6zm3.8-1.9 3 1.7c.8.5.8 1.6 0 2.1l-3 1.7L15.6 12l2.8-3.1z"/></svg><span><small>Bald bei</small>Google Play</span></span>
     </div>
   </div>
 
-  <div class="hero-phones" role="img" aria-label="Booksquad auf drei Smartphones: Profil mit Bücherregal, Feed mit Beiträgen und eine Buchseite">
-    <div class="hp hp-left" style="--depth:0.6"><div class="mouse"><div class="float"><div class="phone"><img src="img/08-profil.webp" width="600" height="1305" alt=""></div></div></div></div>
-    <div class="hp hp-right" style="--depth:0.8"><div class="mouse"><div class="float"><div class="phone"><img src="img/03-buch.webp" width="600" height="1305" alt=""></div></div></div></div>
-    <div class="hp hp-center" style="--depth:1.2"><div class="mouse"><div class="float"><div class="phone"><img src="img/01-feed.webp" width="600" height="1305" alt=""></div></div></div></div>
-    <div class="chip chip-1" style="--depth:1.6"><span>❤️</span> 24 Likes</div>
-    <div class="chip chip-2" style="--depth:1.4"><span>📚</span> Im Regal · Lese ich</div>
+  <div class="hero-phones" role="img" aria-label="Booksquad auf drei Smartphones: Start mit Lese-Serie, Bibliotheksregal und Statistik">
+    <div class="hp hp-left" style="--depth:0.6"><div class="mouse"><div class="float"><div class="phone"><img src="img/20-home.webp" width="600" height="1305" alt=""></div></div></div></div>
+    <div class="hp hp-right" style="--depth:0.8"><div class="mouse"><div class="float"><div class="phone"><img src="img/21-statistik.webp" width="600" height="1305" alt=""></div></div></div></div>
+    <div class="hp hp-center" style="--depth:1.2"><div class="mouse"><div class="float"><div class="phone"><img src="img/22-regal.webp" width="600" height="1305" alt=""></div></div></div></div>
   </div>
 </section>
 
-<section class="values" aria-label="Was Booksquad ausmacht">
-  <div data-reveal style="--d:0"><b class="ico">✦</b><strong>Keine Werbung</strong><span>Bücher statt Banner.</span></div>
-  <div data-reveal style="--d:1"><b class="ico">◎</b><strong>Kein Tracking</strong><span>Keine Analyse- oder Werbe-SDKs.</span></div>
-  <div data-reveal style="--d:2"><b class="ico">⌂</b><strong>Daten in der EU</strong><span>Server in Frankfurt am Main.</span></div>
-  <div data-reveal style="--d:3"><b class="ico">♡</b><strong>Kostenlos</strong><span>Alle Grundfunktionen, für immer.</span></div>
+<!-- A real shelf of the promises, with brass plates instead of icon boxes. -->
+<section class="promise" aria-label="Was Booksquad ausmacht">
+  <div class="case">
+    <div class="compartment">
+      <div class="spines" aria-hidden="true">
+        <i style="--h:88%;--w:34px;--c:#6e2b33"></i><i style="--h:96%;--w:26px;--c:#1f2d4a"></i><i style="--h:82%;--w:40px;--c:#2f5442"></i><i style="--h:92%;--w:30px;--c:#9c6b2e"></i><i style="--h:86%;--w:24px;--c:#5b3a63"></i><i style="--h:94%;--w:36px;--c:#3e5c6b"></i><i style="--h:80%;--w:28px;--c:#7b3140"></i><i style="--h:90%;--w:32px;--c:#b9a27a"></i><i class="lean" style="--h:84%;--w:30px;--c:#435b3a"></i>
+      </div>
+      <ul class="promises">
+        <li data-reveal style="--d:0"><strong>Keine Werbung</strong><span>Bücher statt Banner.</span></li>
+        <li data-reveal style="--d:1"><strong>Kein Tracking</strong><span>Keine Analyse- oder Werbe-SDKs.</span></li>
+        <li data-reveal style="--d:2"><strong>Daten in der EU</strong><span>Server in Frankfurt am Main.</span></li>
+        <li data-reveal style="--d:3"><strong>Kostenlos</strong><span>Alle Grundfunktionen, für immer.</span></li>
+      </ul>
+    </div>
+    <div class="board"><span class="brass">VERSPROCHEN</span></div>
+  </div>
+</section>
+
+<section id="regal" class="shelf-feature">
+  <div class="shelf-text">
+    <p class="eyebrow" data-reveal>Dein Regal</p>
+    <h2 data-reveal style="--d:1">Ein Bücherregal,<br>wie zu Hause.</h2>
+    <p data-reveal style="--d:2">Walnussholz, warmes Lampenlicht und Messingschilder: Deine Bücher stehen mit dem Rücken nach vorn, sortiert nach „Lese ich“, „Ungelesen“ und „Gelesen“. Dicke Bücher sind dicker, und jedes behält seine Farbe.</p>
+    <ul class="ticks" data-reveal style="--d:3">
+      <li>Buchrücken oder Cover, per Tipp umschaltbar</li>
+      <li>Eigene Reihenfolge per Ziehen und Ablegen</li>
+      <li>Dein Stapel ungelesener Bücher auf einen Blick</li>
+    </ul>
+  </div>
+  <div class="tilt-wrap" data-parallax="60"><div class="phone big" data-reveal="tilt-right"><img src="img/22-regal.webp" width="600" height="1305" alt="Bibliotheksregal aus Walnuss mit Buchrücken auf drei Brettern: Lese ich, Ungelesen, Gelesen" loading="lazy"></div></div>
 </section>
 
 <section id="funktionen" class="features">
   <h2 class="section-title" data-reveal>Alles, was Leser verbindet</h2>
 
-  <article class="feature">
-    <div class="tilt-wrap" data-parallax="50"><div class="phone" data-reveal="tilt-left"><img src="img/09-regal.webp" width="600" height="1305" alt="Bücherregal mit Covern auf Regalbrettern und Filtern Lese ich, Ungelesen, Gelesen" loading="lazy"></div></div>
-    <div class="feature-text">
-      <p class="eyebrow" data-reveal>01 · Dein Regal</p>
-      <h3 data-reveal style="--d:1">Jedes Buch an seinem Platz</h3>
-      <p data-reveal style="--d:2">Sortiere deine Bücher nach „Lese ich gerade“, „Ungelesen“ und „Gelesen“. Dein Regal wächst mit jedem Buch und zeigt Freunden, was dich gerade begleitet.</p>
-    </div>
-  </article>
+  <div class="grid">
+    <article class="card" data-reveal style="--d:0">
+      <div class="phone"><img src="img/20-home.webp" width="600" height="1305" alt="Start mit dem Buch, das gerade gelesen wird, Lese-Serie und Jahresziel" loading="lazy"></div>
+      <p class="eyebrow">Jeden Tag</p>
+      <h3>Lese-Serie und Jahresziel</h3>
+      <p>Trag deine Seite ein, und Booksquad zählt mit: Tage in Folge, Fortschritt im Buch und wie nah du deinem Jahresziel bist.</p>
+    </article>
+    <article class="card" data-reveal style="--d:1">
+      <div class="phone"><img src="img/21-statistik.webp" width="600" height="1305" alt="Statistik mit Seiten pro Woche und Kalender der Lesetage" loading="lazy"></div>
+      <p class="eyebrow">Dein Lesejahr</p>
+      <h3>Statistik, die Lust macht</h3>
+      <p>Seiten pro Woche, Bücher pro Monat, ein Kalender deiner Lesetage und deine längste Serie, schön aufbereitet.</p>
+    </article>
+    <article class="card" data-reveal style="--d:2">
+      <div class="phone"><img src="img/25-chat.webp" width="600" height="1305" alt="Direktnachrichten zwischen zwei Lesern über Der Schwarm und Dune" loading="lazy"></div>
+      <p class="eyebrow">Nachrichten</p>
+      <h3>Schreib mit deiner Squad</h3>
+      <p>Wer sich gegenseitig folgt, kann sich privat schreiben, über das letzte Kapitel oder das nächste gemeinsame Buch.</p>
+    </article>
+    <article class="card" data-reveal style="--d:3">
+      <div class="phone"><img src="img/24-lesekreise.webp" width="600" height="1305" alt="Lesekreise für Klassiker, Science-Fiction, Krimis und Fantasy" loading="lazy"></div>
+      <p class="eyebrow">Lesekreise</p>
+      <h3>Gemeinsam lesen</h3>
+      <p>Öffentliche Lesekreise für jedes Genre oder private für deine Freunde, ganz einfach per Einladungscode.</p>
+    </article>
+    <article class="card" data-reveal style="--d:4">
+      <div class="phone"><img src="img/27-buch.webp" width="600" height="1305" alt="Buchseite mit Cover, Lesefortschritt und Beschreibung" loading="lazy"></div>
+      <p class="eyebrow">Entdecken</p>
+      <h3>Ein Tipp, und es steht im Regal</h3>
+      <p>Millionen Bücher, Beschreibungen und Beiträge anderer Leser. Ins Regal oder auf die Wunschliste, mit einem Tipp.</p>
+    </article>
+    <article class="card" data-reveal style="--d:5">
+      <div class="phone"><img src="img/23-profil.webp" width="600" height="1305" alt="Profil mit Bio, Lieblingsgenres und drei Empfehlungen" loading="lazy"></div>
+      <p class="eyebrow">Dein Profil</p>
+      <h3>Zeig, was du liest</h3>
+      <p>Bio, Lieblingsgenres und deine drei Empfehlungen. Auf Wunsch privat: Dann sehen nur Leute, die du annimmst, dein Regal.</p>
+    </article>
+  </div>
+</section>
 
-  <article class="feature reverse">
-    <div class="tilt-wrap" data-parallax="50"><div class="phone" data-reveal="tilt-right"><img src="img/01-feed.webp" width="600" height="1305" alt="Feed mit Zitat- und Rezensions-Beiträgen von Freunden" loading="lazy"></div></div>
-    <div class="feature-text">
-      <p class="eyebrow" data-reveal>02 · Dein Feed</p>
-      <h3 data-reveal style="--d:1">Sieh, was deine Freunde lesen</h3>
-      <p data-reveal style="--d:2">Lieblingszitate, ehrliche Rezensionen, neue Entdeckungen: Folge Menschen mit gutem Buchgeschmack, like und kommentiere ihre Beiträge.</p>
-    </div>
-  </article>
-
-  <article class="feature">
-    <div class="tilt-wrap" data-parallax="50"><div class="phone" data-reveal="tilt-left"><img src="img/06-lesekreis.webp" width="600" height="1305" alt="Lesekreis mit Beiträgen der Mitglieder" loading="lazy"></div></div>
-    <div class="feature-text">
-      <p class="eyebrow" data-reveal>03 · Lesekreise</p>
-      <h3 data-reveal style="--d:1">Gemeinsam lesen, gemeinsam reden</h3>
-      <p data-reveal style="--d:2">Gründe einen öffentlichen Lesekreis für dein Lieblingsgenre oder einen privaten für deine Freunde, ganz einfach per Einladungscode.</p>
-    </div>
-  </article>
-
-  <article class="feature reverse">
-    <div class="tilt-wrap" data-parallax="50"><div class="phone" data-reveal="tilt-right"><img src="img/03-buch.webp" width="600" height="1305" alt="Buchseite mit Cover, Beschreibung und Status-Auswahl" loading="lazy"></div></div>
-    <div class="feature-text">
-      <p class="eyebrow" data-reveal>04 · Entdecken</p>
-      <h3 data-reveal style="--d:1">Ein Tipp, und es steht im Regal</h3>
-      <p data-reveal style="--d:2">Finde Millionen Bücher, lies Beschreibungen und Beiträge anderer Leser, und setz Titel mit einem Tipp ins Regal oder auf deine Wunschliste.</p>
-    </div>
-  </article>
+<section class="night">
+  <div class="night-text">
+    <p class="eyebrow" data-reveal>Für die Leselampe</p>
+    <h2 data-reveal style="--d:1">Abends warm statt schwarz.</h2>
+    <p data-reveal style="--d:2">Der Dunkelmodus ist ein tiefes Braun mit goldenem Licht, angenehm für die letzte Seite vor dem Schlafen.</p>
+  </div>
+  <div class="phone" data-reveal="zoom"><img src="img/28-home-dunkel.webp" width="600" height="1305" alt="Start im warmen Dunkelmodus" loading="lazy"></div>
 </section>
 
 <section id="teaser" class="teaser">
@@ -129,7 +167,7 @@
 </section>
 
 <section id="beta" class="beta">
-  <div class="beta-glow" aria-hidden="true"></div>
+  <div class="lamp" aria-hidden="true"></div>
   <h2 data-reveal>Werde Beta-Tester</h2>
   <p data-reveal style="--d:1">Booksquad startet bald. Vorher suchen wir Leserinnen und Leser, die die App zwei Wochen lang ausprobieren und uns sagen, was gut ist und was besser werden muss. Für iPhone und Android.</p>
   <form class="beta-form" data-reveal style="--d:2" novalidate>
@@ -153,7 +191,7 @@
       <input type="checkbox" name="consent" required>
       <span>Ich bin einverstanden, dass Booksquad meine Angaben speichert, um mich zum Beta-Test einzuladen. Widerruf jederzeit per Mail an support@booksquad.de. Details in der <a href="privacy.html#beta">Datenschutzerklärung</a>.</span>
     </label>
-    <button class="btn btn-light" type="submit">Jetzt anmelden</button>
+    <button class="btn" type="submit">Jetzt anmelden</button>
     <p class="form-status" role="status" aria-live="polite"></p>
   </form>
 </section>
@@ -178,11 +216,15 @@
       <div class="answer"><p>Deine Daten liegen auf Servern in Frankfurt am Main. Wir zeigen keine Werbung, verkaufen keine Daten und nutzen keine Tracking-Dienste. Du kannst dein Konto jederzeit in der App löschen.</p></div>
     </details>
     <details data-reveal style="--d:3">
-      <summary><span class="num">04</span><span class="q">Wer kann meine Beiträge sehen?</span><span class="icon" aria-hidden="true"></span></summary>
-      <div class="answer"><p>Angemeldete Nutzer sehen dein Profil und deine öffentlichen Beiträge. Beiträge in privaten Lesekreisen sehen nur deren Mitglieder. Du kannst andere Nutzer jederzeit blockieren und Inhalte melden.</p></div>
+      <summary><span class="num">04</span><span class="q">Wer kann mein Regal und meine Beiträge sehen?</span><span class="icon" aria-hidden="true"></span></summary>
+      <div class="answer"><p>Bei einem öffentlichen Konto sehen angemeldete Nutzer dein Profil, Regal und deine Beiträge. Stellst du dein Konto auf privat, sehen das nur Leute, deren Folgeanfrage du annimmst. Beiträge in privaten Lesekreisen sehen nur deren Mitglieder.</p></div>
     </details>
     <details data-reveal style="--d:4">
-      <summary><span class="num">05</span><span class="q">Ab welchem Alter ist Booksquad?</span><span class="icon" aria-hidden="true"></span></summary>
+      <summary><span class="num">05</span><span class="q">Wer kann meine Nachrichten lesen?</span><span class="icon" aria-hidden="true"></span></summary>
+      <div class="answer"><p>Nur ihr beiden. Nachrichten gibt es nur zwischen Leuten, die sich gegenseitig folgen. Wir lesen nicht mit. Meldest du eine Nachricht, sieht ein Moderator genau diese eine.</p></div>
+    </details>
+    <details data-reveal style="--d:5">
+      <summary><span class="num">06</span><span class="q">Ab welchem Alter ist Booksquad?</span><span class="icon" aria-hidden="true"></span></summary>
       <div class="answer"><p>Booksquad richtet sich an Personen ab 16 Jahren.</p></div>
     </details>
   </div>
@@ -191,7 +233,7 @@
 </main>
 
 <footer class="foot">
-  <div class="logo"><img src="img/icon-64.png" width="24" height="24" alt=""><span>Booksquad</span></div>
+  <span class="plate">BOOKSQUAD</span>
   <nav>
     <a href="imprint.html">Impressum</a>
     <a href="privacy.html">Datenschutz</a>
