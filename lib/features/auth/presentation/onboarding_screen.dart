@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_config.dart';
 import '../../../core/constants/genres.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/booksquad_ui.dart';
 import '../../books/presentation/visual_shelf.dart';
 import '../../books/providers/books_provider.dart';
@@ -165,7 +166,33 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text('Einrichtung (${_step + 1}/4)'),
+        title: Semantics(
+          label: 'Einrichtung, Schritt ${_step + 1} von 4',
+          excludeSemantics: true,
+          child: Row(
+            children: [
+              for (var i = 0; i < 4; i++) ...[
+                if (i > 0) const SizedBox(width: 6),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween(end: i <= _step ? 1 : 0),
+                      duration: const Duration(milliseconds: 450),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, v, _) => LinearProgressIndicator(
+                        value: v,
+                        minHeight: 6,
+                        color: context.palette.burgundy,
+                        backgroundColor: context.palette.parchment,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
         leading: _step > 0
             ? IconButton(
                 tooltip: 'Zurück',
@@ -194,7 +221,31 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   children: [
                     const BooksquadWordmark(),
                     const SizedBox(height: 18),
-                    _buildStep(),
+                    AnimatedSwitcher(
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 380),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      layoutBuilder: (current, previous) => Stack(
+                        alignment: Alignment.topCenter,
+                        children: [...previous, ?current],
+                      ),
+                      transitionBuilder: (child, anim) => FadeTransition(
+                        opacity: anim,
+                        child: SlideTransition(
+                          position: Tween(
+                            begin: const Offset(0.12, 0),
+                            end: Offset.zero,
+                          ).animate(anim),
+                          child: child,
+                        ),
+                      ),
+                      child: KeyedSubtree(
+                        key: ValueKey(_step),
+                        child: _buildStep(),
+                      ),
+                    ),
                   ],
                 ),
               ),

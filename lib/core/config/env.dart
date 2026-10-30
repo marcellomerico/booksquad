@@ -28,4 +28,7 @@ class Env {
       supabaseAnonKey.isNotEmpty;
 
   static bool get isGoogleConfigured => googleWebClientId.isNotEmpty;
+
+  /// Off until Sign in with Apple is set up in the Apple Developer account (#42).
+  static bool get isAppleEnabled => _read('APPLE_SIGN_IN') == 'true';
 }
