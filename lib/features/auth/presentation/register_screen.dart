@@ -10,6 +10,7 @@ import '../../../core/utils/validators.dart';
 import '../../books/providers/books_provider.dart';
 import '../providers/auth_provider.dart';
 import 'social_sign_in_buttons.dart';
+import 'auth_hero.dart';
 import 'terms_links_text.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -133,11 +134,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Center(child: BooksquadWordmark()),
-                const SizedBox(height: 24),
-                Text(
-                  'Willkommen\nbei Booksquad.',
-                  style: Theme.of(context).textTheme.displayMedium,
+                const AuthShelfHero(height: 120),
+                const SizedBox(height: 22),
+                Reveal(
+                  index: 2,
+                  child: Text(
+                    'Willkommen\nbei Booksquad.',
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Text(

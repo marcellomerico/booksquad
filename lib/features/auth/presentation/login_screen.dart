@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/booksquad_ui.dart';
 import '../providers/auth_provider.dart';
+import 'auth_hero.dart';
 import 'social_sign_in_buttons.dart';
 import 'terms_links_text.dart';
 
@@ -57,17 +58,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 10),
-              const Center(child: BooksquadWordmark()),
-              const SizedBox(height: 28),
-              Text(
-                'Willkommen\nzurück.',
-                style: Theme.of(context).textTheme.displayMedium,
+              const SizedBox(height: 6),
+              const AuthShelfHero(),
+              const SizedBox(height: 26),
+              Reveal(
+                index: 2,
+                child: Text(
+                  'Willkommen\nzurück.',
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
               ),
               const SizedBox(height: 10),
-              Text(
-                'Deine Community für Bücher und Leser.',
-                style: Theme.of(context).textTheme.bodySmall,
+              Reveal(
+                index: 3,
+                child: Text(
+                  'Deine Community für Bücher und Leser.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ),
               const SizedBox(height: 28),
               AutofillGroup(
