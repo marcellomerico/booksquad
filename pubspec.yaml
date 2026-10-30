@@ -63,3 +63,9 @@ flutter_native_splash:
     image: assets/branding/icon_foreground.png
     icon_background_color: "#7B3140"
   web: false
+
+# shortcut: inappwebview 6.1.5 (via cloudflare_turnstile) breaks the Android build on AGP 9
+# (proguard-android.txt); drop these once a stable release supports AGP 9.
+dependency_overrides:
+  flutter_inappwebview: 6.2.0-beta.3
+  flutter_inappwebview_android: 1.2.0-beta.3
