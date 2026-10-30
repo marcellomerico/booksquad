@@ -12,6 +12,7 @@ Antworten für App Store Connect und Google Play Console, Stand Oktober 2026. Gr
 | Kontaktinformationen → Name (Anzeigename) | Ja | Ja | Nein | App-Funktionalität |
 | Nutzerinhalte → Fotos oder Videos | Ja | Ja | Nein | App-Funktionalität |
 | Nutzerinhalte → Andere Nutzerinhalte (Beiträge, Kommentare, Bücherregal) | Ja | Ja | Nein | App-Funktionalität |
+| Nutzerinhalte → E-Mails oder Textnachrichten (Direktnachrichten in der App) | Ja | Ja | Nein | App-Funktionalität |
 | Kennungen → Nutzer-ID | Ja | Ja | Nein | App-Funktionalität |
 
 Nicht erhoben: Standort (GPS wird aus Fotos entfernt), Kontakte, Browserverlauf, Suchverlauf (Buchsuchen werden nicht gespeichert), Kauf-, Finanz-, Gesundheits- und Diagnosedaten.
@@ -31,7 +32,8 @@ Diese Angaben entsprechen `ios/Runner/PrivacyInfo.xcprivacy`.
 | Persönliche Daten → Name | Ja | Optional (Anzeigename) | App-Funktionalität |
 | Persönliche Daten → Nutzer-IDs | Ja | Pflicht | Kontoverwaltung, App-Funktionalität |
 | Fotos und Videos → Fotos | Ja | Optional | App-Funktionalität |
-| App-Aktivität → Sonstige nutzergenerierte Inhalte | Ja | Optional | App-Funktionalität |
+| Nachrichten → Andere In-App-Nachrichten (Direktnachrichten) | Ja | Optional | App-Funktionalität |
+| App-Aktivität → Sonstige nutzergenerierte Inhalte (Beiträge, Kommentare, Bücherregal, Lesefortschritt) | Ja | Optional | App-Funktionalität |
 | App-Aktivität → Sonstige Aktionen (Likes, Folgen, Meldungen) | Ja | Optional | App-Funktionalität, Betrugsprävention/Sicherheit |
 
 ## 3. Altersfreigabe
