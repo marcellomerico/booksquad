@@ -9,6 +9,13 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
 
+  // Promise shelf: spines drop in one after another when the shelf scrolls into view.
+  const promise = document.querySelector('.promise');
+  if (promise) {
+    promise.querySelectorAll('.spines i').forEach((el, i) => el.style.setProperty('--n', i));
+    io.observe(promise);
+  }
+
   const header = document.querySelector('.top');
   const bar = document.querySelector('.progress');
   const parallax = [...document.querySelectorAll('[data-parallax]')];
