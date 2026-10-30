@@ -119,15 +119,17 @@ Größen:
 
 Mit einem Demo-Konto und gefüllten Demo-Daten aufnehmen (echte Buchcover, keine echten Personen). Reihenfolge und Bildtexte:
 
-| # | Screen | Bildtext oben |
-|---|--------|---------------|
-| 1 | Feed mit Beiträgen | Sieh, was deine Freunde lesen |
-| 2 | Bücherregal (Profil) | Dein Regal, immer dabei |
-| 3 | Buch-Detailseite | Alles zu einem Buch auf einen Blick |
-| 4 | Lesekreis-Detail | Lesekreise für jedes Genre |
-| 5 | Beitrag erstellen (Zitat) | Teile Rezensionen und Zitate |
-| 6 | Entdecken | Finde Menschen mit deinem Geschmack |
+| # | Datei | Screen | Bildtext oben |
+|---|-------|--------|---------------|
+| 1 | `01-22-regal.png` | Bibliotheksregal im Profil | Dein Bücherregal, wie zu Hause |
+| 2 | `02-20-home.png` | Start: Lese ich gerade, Lese-Serie, Jahresziel | Lese-Serie und Jahresziel im Blick |
+| 3 | `03-21-statistik.png` | Statistik (Monat) | Dein Lesejahr in Zahlen |
+| 4 | `04-25-chat.png` | Direktnachricht | Schreib mit Leuten, die lesen wie du |
+| 5 | `05-24-lesekreise.png` | Lesekreise | Lesekreise für jedes Genre |
+| 6 | `06-27-buch.png` | Buch-Detailseite | Alles zu einem Buch auf einen Blick |
+| 7 | `07-23-profil.png` | Profil mit Bio und Empfehlungen | Dein Profil, deine Lieblingsbücher |
+| 8 | `08-28-home-dunkel.png` | Start im Dunkelmodus | Abends im warmen Dunkelmodus |
 
-Bildtexte in Source Serif 4, Bordeaux `#7B3140` auf Creme `#F7F2E8`, passend zur App.
+Bildtexte in Source Serif 4, Creme `#F7F2E8` auf Bordeaux bzw. Walnuss mit warmem Lichtschein, passend zur App. Rohbilder vom iPhone 16 Pro Max (1320 × 2868) im Demo-Modus.
 
-Feature-Grafik (Play): App-Icon links, Schriftzug „Booksquad“ in dunklem Gold `#85661A`, Untertitel „Lesen mit Freunden“, Hintergrund Creme.
+**Feature-Grafik (Play):** `docs/store/feature-graphic.png` (1024 × 500): Messingschild „BOOKSQUAD“, Claim „Lesen ist schöner mit deiner Squad.“, rechts das Bibliotheksregal, Walnuss-Hintergrund.

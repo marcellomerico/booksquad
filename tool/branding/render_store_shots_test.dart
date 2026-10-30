@@ -1,6 +1,7 @@
 // Renders store marketing images and the README hero from docs/screenshots.
 // Run: flutter test tool/branding/render_store_shots_test.dart
-// Output: docs/store/*.png (1320x2868, App Store 6.9") and docs/screenshots/hero.png
+// Output: docs/store/*.png (1320x2868, App Store 6.9"), docs/store/feature-graphic.png
+// (1024x500, Google Play) and docs/screenshots/hero.png
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -13,13 +14,19 @@ const burgundyDark = Color(0xFF5E2330);
 const cream = Color(0xFFF7F2E8);
 const gold = Color(0xFFC7A64B);
 
+const walnut = Color(0xFF2A1C14);
+const walnutDeep = Color(0xFF140D09);
+
+/// (screenshot, caption, dark background?) in store order.
 const shots = [
-  ('01-feed', 'Sieh, was deine\nFreunde lesen'),
-  ('09-regal', 'Dein Regal füllt\nsich mit jedem Buch'),
-  ('03-buch', 'Alles zu einem Buch\nauf einen Blick'),
-  ('06-lesekreis', 'Lesekreise für\njedes Genre'),
-  ('16-wunschliste', 'Wünsche getrennt\nvom Regal'),
-  ('04-entdecken', 'Finde Menschen mit\ndeinem Geschmack'),
+  ('22-regal', 'Dein Bücherregal,\nwie zu Hause', true),
+  ('20-home', 'Lese-Serie und\nJahresziel im Blick', false),
+  ('21-statistik', 'Dein Lesejahr\nin Zahlen', false),
+  ('25-chat', 'Schreib mit Leuten,\ndie lesen wie du', false),
+  ('24-lesekreise', 'Lesekreise für\njedes Genre', false),
+  ('27-buch', 'Alles zu einem Buch\nauf einen Blick', false),
+  ('23-profil', 'Dein Profil, deine\nLieblingsbücher', false),
+  ('28-home-dunkel', 'Abends im warmen\nDunkelmodus', true),
 ];
 
 Future<ui.Image> load(String path) async {
@@ -77,21 +84,91 @@ void main() {
       await font.load();
 
       const w = 1320, h = 2868;
-      for (final (name, caption) in shots) {
+      final keep = {for (final s in shots) '${s.$1}.png'};
+      for (final f in Directory('docs/store').listSync().whereType<File>()) {
+        final n = f.uri.pathSegments.last;
+        if (n.endsWith('.png') && n != 'feature-graphic.png' && !keep.contains(n)) f.deleteSync();
+      }
+      for (final (i, (name, caption, dark)) in shots.indexed) {
         final shot = await load('docs/screenshots/$name.png');
         final rec = ui.PictureRecorder();
         final c = Canvas(rec);
         c.drawRect(
           const Rect.fromLTWH(0, 0, 1320, 2868),
           Paint()
-            ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 2868), [burgundy, burgundyDark]),
+            ..shader = ui.Gradient.linear(
+              Offset.zero,
+              const Offset(0, 2868),
+              dark ? [walnut, walnutDeep] : [burgundy, burgundyDark],
+            ),
+        );
+        // Reading-lamp glow behind the caption.
+        c.drawCircle(
+          const Offset(660, 260),
+          700,
+          Paint()
+            ..shader = ui.Gradient.radial(const Offset(660, 260), 700, [
+              const Color(0x40FFC46E),
+              const Color(0x00FFC46E),
+            ]),
         );
         c.drawRect(const Rect.fromLTWH(560, 150, 200, 8), Paint()..color = gold);
         paintText(c, caption, const Offset(660, 220), 112, cream);
         const phoneW = 1000.0;
         final phoneH = phoneW * shot.height / shot.width;
         paintPhone(c, shot, Rect.fromLTWH((w - phoneW) / 2, 640, phoneW, phoneH));
-        await save(rec.endRecording(), w, h, 'docs/store/$name.png');
+        await save(rec.endRecording(), w, h, 'docs/store/${(i + 1).toString().padLeft(2, '0')}-$name.png');
+      }
+
+      // Google Play feature graphic: brand left, the library shelf right.
+      {
+        const fw = 1024, fh = 500;
+        final shelf = await load('docs/screenshots/22-regal.png');
+        final rec = ui.PictureRecorder();
+        final c = Canvas(rec);
+        c.drawRect(
+          const Rect.fromLTWH(0, 0, 1024, 500),
+          Paint()..shader = ui.Gradient.linear(Offset.zero, const Offset(1024, 500), [walnut, walnutDeep]),
+        );
+        c.drawCircle(
+          const Offset(780, 120),
+          420,
+          Paint()
+            ..shader = ui.Gradient.radial(const Offset(780, 120), 420, [
+              const Color(0x55FFC46E),
+              const Color(0x00FFC46E),
+            ]),
+        );
+        // Bookcase crop (the shelves only) as a framed picture on the right.
+        // The case itself, inside the screenshot's light page margin.
+        final src = Rect.fromLTWH(shelf.width * 0.045, shelf.height * 0.19, shelf.width * 0.91, shelf.height * 0.52);
+        final dst = Rect.fromLTWH(560, 40, 420, 420 * src.height / src.width);
+        c.save();
+        c.clipRRect(RRect.fromRectAndRadius(dst, const Radius.circular(8)));
+        c.drawImageRect(shelf, src, dst, Paint()..filterQuality = FilterQuality.high);
+        c.restore();
+        final plate = RRect.fromRectAndRadius(const Rect.fromLTWH(60, 150, 236, 40), const Radius.circular(4));
+        c.drawRRect(
+          plate,
+          Paint()..shader = ui.Gradient.linear(const Offset(0, 150), const Offset(0, 190), [const Color(0xFFE6C77A), const Color(0xFFB48A3A)]),
+        );
+        final tp = TextPainter(
+          text: const TextSpan(
+            text: 'BOOKSQUAD',
+            style: TextStyle(fontFamily: 'SourceSerif4', fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: 5, color: Color(0xFF2A1A10)),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        tp.paint(c, Offset(178 - tp.width / 2, 170 - tp.height / 2));
+        final claim = TextPainter(
+          text: const TextSpan(
+            text: 'Lesen ist schöner\nmit deiner Squad.',
+            style: TextStyle(fontFamily: 'SourceSerif4', fontSize: 50, height: 1.1, fontWeight: FontWeight.w700, color: cream),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout(maxWidth: 480);
+        claim.paint(c, const Offset(60, 220));
+        await save(rec.endRecording(), fw, fh, 'docs/store/feature-graphic.png');
       }
 
       // README hero: three phones on cream.
@@ -99,7 +176,7 @@ void main() {
       final rec = ui.PictureRecorder();
       final c = Canvas(rec);
       c.drawRect(const Rect.fromLTWH(0, 0, 2400, 1500), Paint()..color = cream);
-      final names = ['08-profil', '01-feed', '03-buch'];
+      final names = ['23-profil', '20-home', '22-regal'];
       const pw = 560.0;
       for (var i = 0; i < 3; i++) {
         final shot = await load('docs/screenshots/${names[i]}.png');
@@ -110,6 +187,7 @@ void main() {
       }
       await save(rec.endRecording(), hw, hh, 'docs/screenshots/hero.png');
     });
-    expect(File('docs/store/01-feed.png').existsSync(), isTrue);
+    expect(File('docs/store/01-22-regal.png').existsSync(), isTrue);
+    expect(File('docs/store/feature-graphic.png').existsSync(), isTrue);
   });
 }

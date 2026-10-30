@@ -23,14 +23,16 @@ Keine Werbung, kein Tracking, Daten in der EU.
 
 <table>
   <tr>
-    <td><img src="docs/store/01-feed.png" alt="Feed"></td>
-    <td><img src="docs/store/09-regal.png" alt="Bücherregal"></td>
-    <td><img src="docs/store/03-buch.png" alt="Buchseite"></td>
+    <td><img src="docs/store/01-22-regal.png" alt="Bücherregal"></td>
+    <td><img src="docs/store/02-20-home.png" alt="Start mit Lese-Serie und Jahresziel"></td>
+    <td><img src="docs/store/03-21-statistik.png" alt="Statistik"></td>
+    <td><img src="docs/store/04-25-chat.png" alt="Direktnachrichten"></td>
   </tr>
   <tr>
-    <td><img src="docs/store/06-lesekreis.png" alt="Lesekreis"></td>
-    <td><img src="docs/store/16-wunschliste.png" alt="Wunschliste"></td>
-    <td><img src="docs/store/04-entdecken.png" alt="Entdecken"></td>
+    <td><img src="docs/store/05-24-lesekreise.png" alt="Lesekreise"></td>
+    <td><img src="docs/store/06-27-buch.png" alt="Buchseite"></td>
+    <td><img src="docs/store/07-23-profil.png" alt="Profil"></td>
+    <td><img src="docs/store/08-28-home-dunkel.png" alt="Dunkelmodus"></td>
   </tr>
 </table>
 

@@ -265,7 +265,26 @@ class DemoStore {
               favoriteRank: favorite,
               // Spread finished books over the past months for the stats screen.
               finishedAt: status == BookStatus.read
-                  ? ago(days: 9 + 23 * (n % 9))
+                  ? ago(
+                      days:
+                          const [
+                            4,
+                            11,
+                            19,
+                            38,
+                            64,
+                            97,
+                            131,
+                            176,
+                            222,
+                          ][(shelves[user]
+                                      ?.where(
+                                        (e) => e.status == BookStatus.read,
+                                      )
+                                      .length ??
+                                  0) %
+                              9],
+                    )
                   : null,
             ),
           );
@@ -320,6 +339,36 @@ class DemoStore {
     chats['c-jonas'] = (
       'u-jonas',
       [
+        msg(
+          'c-jonas',
+          'u-jonas',
+          'Guten Morgen! Wie weit bist du mit „Der Schwarm“?',
+          600,
+        ),
+        msg(
+          'c-jonas',
+          meId,
+          'Seite 700. Die Szene mit den Walen vor Vancouver 😳',
+          590,
+        ),
+        msg(
+          'c-jonas',
+          'u-jonas',
+          'Ja! Da hab ich das Buch kurz weggelegt.',
+          585,
+        ),
+        msg(
+          'c-jonas',
+          meId,
+          'Lesen wir danach zusammen Dune? Du hattest es so gelobt.',
+          300,
+        ),
+        msg(
+          'c-jonas',
+          'u-jonas',
+          'Unbedingt. Ich lade dich in den Sci-Fi-Lesekreis ein 🚀',
+          290,
+        ),
         msg('c-jonas', 'u-jonas', 'Hast du „Der Schwarm“ schon durch?', 95),
         msg(
           'c-jonas',
