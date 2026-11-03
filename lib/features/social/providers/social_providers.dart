@@ -216,3 +216,13 @@ final onboardingSuggestionsProvider =
       );
       return OnboardingSuggestions(people: people, groups: groups);
     });
+
+/// Signed URL for a stored post image, or null for anything that is not ours
+/// (foreign hosts are never loaded, so no tracking pixels).
+final postImageUrlProvider = FutureProvider.autoDispose.family<String?, String>(
+  (ref, imageUrl) async {
+    final path = postImagePathFromUrl(imageUrl);
+    if (path == null) return null;
+    return ref.watch(postRepositoryProvider).signedPostImageUrl(path);
+  },
+);

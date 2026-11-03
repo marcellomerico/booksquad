@@ -121,29 +121,15 @@ class ProfileRepository {
     return busted;
   }
 
+  /// Post and follower counts; public even for private accounts (like Instagram).
   Future<ProfileStats> getStats(String userId) async {
-    final counts = await Future.wait([
-      _client
-          .from('posts')
-          .select('id')
-          .eq('author_id', userId)
-          .count(CountOption.exact),
-      _client
-          .from('follows')
-          .select('follower_id')
-          .eq('following_id', userId)
-          .count(CountOption.exact),
-      _client
-          .from('follows')
-          .select('following_id')
-          .eq('follower_id', userId)
-          .count(CountOption.exact),
-    ]);
-
+    final rows =
+        await _client.rpc('profile_counts', params: {'p_user': userId}) as List;
+    final row = rows.isEmpty ? const <String, dynamic>{} : rows.first as Map;
     return ProfileStats(
-      postCount: counts[0].count,
-      followerCount: counts[1].count,
-      followingCount: counts[2].count,
+      postCount: row['posts'] as int? ?? 0,
+      followerCount: row['followers'] as int? ?? 0,
+      followingCount: row['following'] as int? ?? 0,
     );
   }
 

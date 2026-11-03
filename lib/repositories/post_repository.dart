@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -208,7 +209,13 @@ class PostRepository {
     required String contentType,
   }) async {
     final ext = contentType.contains('png') ? 'png' : 'jpg';
-    final path = '$userId/${DateTime.now().millisecondsSinceEpoch}.$ext';
+    // Random name: the path must not be guessable from the user id and time.
+    final rnd = Random.secure();
+    final name = List.generate(
+      16,
+      (_) => rnd.nextInt(256).toRadixString(16).padLeft(2, '0'),
+    ).join();
+    final path = '$userId/$name.$ext';
 
     await _client.storage
         .from('post-images')
@@ -218,8 +225,14 @@ class PostRepository {
           fileOptions: FileOptions(upsert: false, contentType: contentType),
         );
 
+    // Stored as the canonical object URL; the bucket is private, so it is
+    // only shown through [signedPostImageUrl].
     return _client.storage.from('post-images').getPublicUrl(path);
   }
+
+  /// Short-lived link to a post image; storage RLS checks the reader may see the post.
+  Future<String> signedPostImageUrl(String path) =>
+      _client.storage.from('post-images').createSignedUrl(path, 3600);
 }
 
 /// Object path inside the 'post-images' bucket for a public URL, or null.
