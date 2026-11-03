@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/utils/time_ago.dart';
 import '../../../models/moderation_report.dart';
-import '../../auth/providers/auth_provider.dart';
 import '../../social/providers/paged_posts.dart';
 import '../../social/providers/social_providers.dart';
 
@@ -21,27 +22,14 @@ class _ModerationQueueScreenState extends ConsumerState<ModerationQueueScreen> {
 
   Future<void> _resolve(ModerationReport report, String action) async {
     if (action == 'delete') {
-      final confirmed = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog.adaptive(
-          title: const Text('Inhalt löschen?'),
-          content: const Text('Der gemeldete Inhalt wird dauerhaft entfernt.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Abbrechen'),
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Löschen'),
-            ),
-          ],
-        ),
+      final confirmed = await confirmDialog(
+        context,
+        title: 'Inhalt löschen?',
+        body: 'Der gemeldete Inhalt wird dauerhaft entfernt.',
+        confirmLabel: 'Löschen',
+        destructive: true,
       );
-      if (confirmed != true || !mounted) return;
+      if (!confirmed || !mounted) return;
     }
     setState(() => _busy.add(report.reportId));
     // Captured before the await: invalidation must still happen if the admin leaves the screen.
@@ -65,9 +53,7 @@ class _ModerationQueueScreenState extends ConsumerState<ModerationQueueScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+        showErrorSnack(context, e);
       }
     } finally {
       if (mounted) setState(() => _busy.remove(report.reportId));

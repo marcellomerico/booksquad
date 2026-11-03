@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../models/user_book.dart';
 import '../../../repositories/open_library_repository.dart';
-import '../../auth/providers/auth_provider.dart';
 import '../providers/books_provider.dart';
 import 'book_spine.dart';
 import 'book_status_sheet.dart';
@@ -581,16 +581,14 @@ class _Bookcase extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFF6A4630), Color(0xFF4A3122), Color(0xFF3A2619)],
+              colors: Walnut.crown,
             ),
           ),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF4A3122), Color(0xFF5A3B28), Color(0xFF4A3122)],
-            ),
+            gradient: LinearGradient(colors: Walnut.side),
           ),
           child: child,
         ),
@@ -601,7 +599,7 @@ class _Bookcase extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFF3A2619), Color(0xFF24170F)],
+              colors: Walnut.plinth,
             ),
           ),
         ),
@@ -625,7 +623,7 @@ class _BackWall extends StatelessWidget {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         stops: [0, 0.35, 1],
-        colors: [Color(0xFF140D09), Color(0xFF2A1C14), Color(0xFF221710)],
+        colors: Walnut.backWall,
       ),
     ),
     child: DecoratedBox(
@@ -824,7 +822,7 @@ class _Board extends StatelessWidget {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         stops: [0, 0.35, 1],
-        colors: [Color(0xFF7A5238), Color(0xFF5E3E2A), Color(0xFF3E281A)],
+        colors: Walnut.board,
       ),
       boxShadow: [
         BoxShadow(
@@ -844,7 +842,7 @@ class _Board extends StatelessWidget {
               gradient: const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFFE6C77A), Color(0xFFB48A3A)],
+                colors: Walnut.brass,
               ),
               boxShadow: const [
                 BoxShadow(
@@ -857,7 +855,7 @@ class _Board extends StatelessWidget {
             child: Text(
               label!,
               style: const TextStyle(
-                color: Color(0xFF2A1A10),
+                color: Walnut.engraving,
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.4,
@@ -900,9 +898,7 @@ class _BookCover extends ConsumerWidget {
       ref.invalidate(myShelfEntryProvider(entry.bookId));
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+        showErrorSnack(context, e);
       }
     }
   }
@@ -1011,19 +1007,11 @@ class _SpineFallback extends StatelessWidget {
   final double width;
   final double height;
 
-  // Book colours, the same in both themes.
-  static const _colors = [
-    Color(0xFF7B3140),
-    Color(0xFF3E5C50),
-    Color(0xFF34495E),
-    Color(0xFF85661A),
-  ];
-
   @override
   Widget build(BuildContext context) => Container(
     width: width,
     height: height,
-    color: _colors[title.hashCode.abs() % _colors.length],
+    color: spineColor(title),
     padding: const EdgeInsets.all(6),
     alignment: Alignment.center,
     child: Text(
@@ -1132,12 +1120,12 @@ class _ToReadStack extends StatelessWidget {
                       ),
                       child: Transform.translate(
                         offset: Offset(
-                          ((e.bookId.hashCode % 13) - 6).toDouble(),
+                          ((stableHash(e.bookId) % 13) - 6).toDouble(),
                           0,
                         ),
                         child: Container(
                           margin: const EdgeInsets.only(top: 2),
-                          width: 118.0 + (e.bookId.hashCode % 26),
+                          width: 118.0 + (stableHash(e.bookId) % 26),
                           height:
                               16.0 + ((e.pageCount ?? 250) / 90).clamp(0, 10),
                           decoration: BoxDecoration(

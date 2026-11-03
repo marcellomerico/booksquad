@@ -3,38 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../models/reading_stats.dart';
 import '../../../models/user_book.dart';
 import '../../../repositories/open_library_repository.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../books/presentation/book_detail_screen.dart' show bookCoverHeroTag;
 import '../../books/providers/books_provider.dart';
-
-const _weekdays = [
-  'Montag',
-  'Dienstag',
-  'Mittwoch',
-  'Donnerstag',
-  'Freitag',
-  'Samstag',
-  'Sonntag',
-];
-const _months = [
-  'Januar',
-  'Februar',
-  'März',
-  'April',
-  'Mai',
-  'Juni',
-  'Juli',
-  'August',
-  'September',
-  'Oktober',
-  'November',
-  'Dezember',
-];
 
 String greetingFor(DateTime now) => now.hour < 11
     ? 'Guten Morgen'
@@ -44,7 +22,7 @@ String greetingFor(DateTime now) => now.hour < 11
 
 /// "Donnerstag, 23. Oktober" above the greeting.
 String homeDateLabel(DateTime now) =>
-    '${_weekdays[now.weekday - 1]}, ${now.day}. ${_months[now.month - 1]}';
+    DateFormat('EEEE, d. MMMM', 'de').format(now);
 
 /// Fills from 0 on first build; skipped when the system asks for less motion.
 class _Grow extends StatelessWidget {
@@ -386,9 +364,7 @@ class _GoalCard extends ConsumerWidget {
       ref.invalidate(readingStatsProvider);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+        showErrorSnack(context, e);
       }
     }
   }

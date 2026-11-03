@@ -8,14 +8,12 @@ class ActivityItem {
     required this.createdAt,
     required this.actor,
     this.postId,
-    this.postPreview,
   });
 
   final ActivityType type;
   final DateTime createdAt;
   final Profile actor;
   final String? postId;
-  final String? postPreview;
 
   String message(String actorName) => switch (type) {
     ActivityType.like => '$actorName gefällt dein Beitrag.',

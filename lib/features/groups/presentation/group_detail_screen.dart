@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/paged_post_list.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../social/providers/paged_posts.dart';
@@ -31,9 +32,7 @@ class GroupDetailScreen extends ConsumerWidget {
       ref.invalidate(groupsProvider);
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+      showErrorSnack(context, e);
     }
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/auth/providers/auth_provider.dart';
+import 'snack.dart';
 import '../../features/social/providers/paged_posts.dart';
 import 'post_card.dart';
 import 'state_views.dart';
@@ -61,9 +61,7 @@ class _LoadMoreRowState extends ConsumerState<_LoadMoreRow> {
       await ref.read(pagedPostsProvider(widget.source).notifier).loadMore();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+      showErrorSnack(context, e);
     }
   }
 

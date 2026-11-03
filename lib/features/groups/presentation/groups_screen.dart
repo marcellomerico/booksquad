@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/constants/app_config.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/booksquad_ui.dart';
 import '../../../core/widgets/state_views.dart';
@@ -284,31 +286,14 @@ class _GroupRow extends ConsumerWidget {
                 tooltip: 'Lesekreis löschen',
                 icon: const Icon(Icons.delete_outline, size: 18),
                 onPressed: () async {
-                  final confirmed = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog.adaptive(
-                      title: const Text('Lesekreis löschen?'),
-                      content: const Text(
-                        'Alle Beiträge in diesem Lesekreis werden entfernt.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text('Abbrechen'),
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            foregroundColor: Theme.of(
-                              context,
-                            ).colorScheme.error,
-                          ),
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text('Löschen'),
-                        ),
-                      ],
-                    ),
+                  final confirmed = await confirmDialog(
+                    context,
+                    title: 'Lesekreis löschen?',
+                    body: 'Alle Beiträge in diesem Lesekreis werden entfernt.',
+                    confirmLabel: 'Löschen',
+                    destructive: true,
                   );
-                  if (confirmed != true) return;
+                  if (!confirmed) return;
                   try {
                     await ref
                         .read(groupRepositoryProvider)
@@ -316,9 +301,7 @@ class _GroupRow extends ConsumerWidget {
                     ref.invalidate(groupsProvider(query));
                   } catch (e) {
                     if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(authErrorMessage(e))),
-                    );
+                    showErrorSnack(context, e);
                   }
                 },
               )
@@ -337,9 +320,7 @@ class _GroupRow extends ConsumerWidget {
                     ref.invalidate(groupsProvider(query));
                   } catch (e) {
                     if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(authErrorMessage(e))),
-                    );
+                    showErrorSnack(context, e);
                   }
                 },
               ),

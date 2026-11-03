@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/utils/launch_utils.dart';
 import '../../../core/utils/time_ago.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../models/verification.dart';
-import '../../auth/providers/auth_provider.dart';
 import '../../social/providers/social_providers.dart';
 
 /// Admin queue: open requests for the verification badge.
@@ -31,9 +31,7 @@ class _VerificationQueueScreenState
       ref.invalidate(openVerificationsProvider);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+        showErrorSnack(context, e);
       }
     } finally {
       if (mounted) setState(() => _busy.remove(req.id));

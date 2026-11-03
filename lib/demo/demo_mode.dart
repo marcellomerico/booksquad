@@ -377,6 +377,7 @@ class _DemoGroups extends GroupRepository {
 }
 
 class _DemoModeration extends ModerationRepository {
+  final _blocked = <String>{};
   _DemoModeration(super.client);
 
   @override
@@ -396,22 +397,23 @@ class _DemoModeration extends ModerationRepository {
   Future<void> blockUser({
     required String blockerId,
     required String blockedId,
-  }) async {}
+  }) async => _blocked.add(blockedId);
 
   @override
   Future<void> unblockUser({
     required String blockerId,
     required String blockedId,
-  }) async {}
+  }) async => _blocked.remove(blockedId);
 
   @override
   Future<bool> isBlocked({
     required String blockerId,
     required String blockedId,
-  }) async => false;
+  }) async => _blocked.contains(blockedId);
 
   @override
-  Future<List<String>> getBlockedUserIds(String userId) async => const [];
+  Future<List<String>> getBlockedUserIds(String userId) async =>
+      _blocked.toList();
 
   @override
   Future<void> reportContent({
@@ -627,33 +629,18 @@ class _DemoProfiles extends ProfileRepository {
     required Set<String> genres,
     String? username,
   }) async {
-    final p = _store.profiles[userId]!;
-    _store.profiles[userId] = Profile(
-      id: p.id,
-      username: username?.trim().toLowerCase() ?? p.username,
+    _store.profiles[userId] = _store.profiles[userId]!.copyWith(
+      username: username?.trim().toLowerCase(),
       displayName: displayName,
       bio: bio,
-      avatarUrl: p.avatarUrl,
       onboardingCompleted: true,
-      verifiedAt: p.verifiedAt,
-      verifiedKind: p.verifiedKind,
-      isPrivate: p.isPrivate,
     );
     _store.genres[userId] = genres.toList();
   }
 
   @override
   Future<void> setPrivate(String userId, bool isPrivate) async {
-    final p = _store.profiles[userId]!;
-    _store.profiles[userId] = Profile(
-      id: p.id,
-      username: p.username,
-      displayName: p.displayName,
-      bio: p.bio,
-      avatarUrl: p.avatarUrl,
-      onboardingCompleted: p.onboardingCompleted,
-      verifiedAt: p.verifiedAt,
-      verifiedKind: p.verifiedKind,
+    _store.profiles[userId] = _store.profiles[userId]!.copyWith(
       isPrivate: isPrivate,
     );
   }
@@ -733,7 +720,6 @@ class _DemoMessages extends MessageRepository {
             unread:
                 !_store.chatRead.contains(e.key) &&
                 e.value.$2.last.senderId != DemoStore.meId,
-            canSend: true,
           ),
     ];
     rows.sort((a, b) => b.lastMessageAt!.compareTo(a.lastMessageAt!));

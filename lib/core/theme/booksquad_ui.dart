@@ -48,6 +48,11 @@ class BooksquadWordmark extends StatelessWidget {
   }
 }
 
+/// Warm lift under cards in light mode (dark mode uses a hairline edge instead).
+const _softShadow = [
+  BoxShadow(color: Color(0x145B3C1E), blurRadius: 20, offset: Offset(0, 6)),
+];
+
 class SoftCard extends StatelessWidget {
   const SoftCard({
     super.key,
@@ -67,15 +72,7 @@ class SoftCard extends StatelessWidget {
         color: context.palette.card,
         borderRadius: BorderRadius.circular(22),
         border: dark ? Border.all(color: context.palette.line) : null,
-        boxShadow: dark
-            ? null
-            : const [
-                BoxShadow(
-                  color: Color(0x145B3C1E),
-                  blurRadius: 20,
-                  offset: Offset(0, 6),
-                ),
-              ],
+        boxShadow: dark ? null : _softShadow,
       ),
       child: Padding(padding: padding, child: child),
     );
@@ -186,15 +183,7 @@ class ListCard extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        boxShadow: dark
-            ? null
-            : const [
-                BoxShadow(
-                  color: Color(0x145B3C1E),
-                  blurRadius: 20,
-                  offset: Offset(0, 6),
-                ),
-              ],
+        boxShadow: dark ? null : _softShadow,
       ),
       child: Material(
         color: context.palette.card,

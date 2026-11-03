@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/booksquad_ui.dart';
@@ -26,20 +27,6 @@ const _monthShort = [
   'O',
   'N',
   'D',
-];
-const _monthNames = [
-  'Januar',
-  'Februar',
-  'März',
-  'April',
-  'Mai',
-  'Juni',
-  'Juli',
-  'August',
-  'September',
-  'Oktober',
-  'November',
-  'Dezember',
 ];
 
 class StatsScreen extends ConsumerStatefulWidget {
@@ -177,7 +164,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Lesetage im ${_monthNames[today.month - 1]}',
+                      'Lesetage im ${DateFormat.MMMM('de').format(today)}',
                       style: _cardTitle(context),
                     ),
                     const SizedBox(height: 12),

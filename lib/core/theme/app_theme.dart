@@ -39,7 +39,6 @@ class Palette extends ThemeExtension<Palette> {
     required this.card,
     required this.success,
     required this.shelfWood,
-    required this.shelfBack,
     required this.accentSurface,
     required this.onAccentSurface,
   });
@@ -67,7 +66,6 @@ class Palette extends ThemeExtension<Palette> {
   final Color card;
   final Color success;
   final Color shelfWood;
-  final Color shelfBack;
 
   /// Highlight cards (streak): bold in light, deep wine in dark.
   final Color accentSurface;
@@ -88,7 +86,6 @@ class Palette extends ThemeExtension<Palette> {
     card: Colors.white,
     success: Color(0xFF4E7A5D),
     shelfWood: Color(0xFFC9A877),
-    shelfBack: Color(0xFFEFE4D2),
     accentSurface: Color(0xFF7B3140),
     onAccentSurface: Colors.white,
   );
@@ -108,7 +105,6 @@ class Palette extends ThemeExtension<Palette> {
     card: Color(0xFF2B231E),
     success: Color(0xFF8DBF9C),
     shelfWood: Color(0xFF6B4E33),
-    shelfBack: Color(0xFF2E2620),
     accentSurface: Color(0xFF5A2430),
     onAccentSurface: Color(0xFFF3EBDD),
   );
@@ -135,7 +131,6 @@ class Palette extends ThemeExtension<Palette> {
       card: l(card, other.card),
       success: l(success, other.success),
       shelfWood: l(shelfWood, other.shelfWood),
-      shelfBack: l(shelfBack, other.shelfBack),
       accentSurface: l(accentSurface, other.accentSurface),
       onAccentSurface: l(onAccentSurface, other.onAccentSurface),
     );

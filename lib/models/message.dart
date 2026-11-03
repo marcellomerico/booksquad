@@ -31,7 +31,6 @@ class ConversationSummary {
     required this.lastSenderId,
     required this.lastMessageAt,
     required this.unread,
-    required this.canSend,
   });
 
   final String id;
@@ -40,9 +39,6 @@ class ConversationSummary {
   final String? lastSenderId;
   final DateTime? lastMessageAt;
   final bool unread;
-
-  /// False once the mutual follow ended; the history stays readable.
-  final bool canSend;
 
   factory ConversationSummary.fromJson(Map<String, dynamic> json) =>
       ConversationSummary(
@@ -54,6 +50,5 @@ class ConversationSummary {
             ? null
             : DateTime.parse(json['last_message_at'] as String),
         unread: json['unread'] as bool? ?? false,
-        canSend: json['can_send'] as bool? ?? false,
       );
 }

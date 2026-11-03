@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/constants/app_config.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_mode.dart';
@@ -36,29 +37,15 @@ class SettingsScreen extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final router = GoRouter.of(context);
     final repo = ref.read(authRepositoryProvider);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog.adaptive(
-        title: const Text('Konto löschen?'),
-        content: const Text(
+    final confirmed = await confirmDialog(
+      context,
+      title: 'Konto löschen?',
+      body:
           'Dein Profil, Beiträge und Daten werden dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Abbrechen'),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
-            ),
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Konto löschen'),
-          ),
-        ],
-      ),
+      confirmLabel: 'Konto löschen',
+      destructive: true,
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     try {
       await repo.deleteAccount();
@@ -82,28 +69,15 @@ class SettingsScreen extends ConsumerWidget {
     if (!value) {
       final open = (await ref.read(followRequestsProvider.future)).length;
       if (open > 0 && context.mounted) {
-        final ok = await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog.adaptive(
-            title: const Text('Konto öffentlich machen?'),
-            content: Text(
-              open == 1
-                  ? 'Deine offene Folgeanfrage wird automatisch angenommen.'
-                  : 'Deine $open offenen Folgeanfragen werden automatisch angenommen.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Abbrechen'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Öffentlich machen'),
-              ),
-            ],
-          ),
+        final ok = await confirmDialog(
+          context,
+          title: 'Konto öffentlich machen?',
+          body: open == 1
+              ? 'Deine offene Folgeanfrage wird automatisch angenommen.'
+              : 'Deine $open offenen Folgeanfragen werden automatisch angenommen.',
+          confirmLabel: 'Öffentlich machen',
         );
-        if (ok != true) return;
+        if (!ok) return;
       }
     }
     try {
@@ -145,6 +119,11 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.verified_outlined),
             title: const Text('Verifizieren lassen'),
             onTap: () => context.push('/settings/verify'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.block),
+            title: const Text('Blockierte Konten'),
+            onTap: () => context.push('/settings/blocked'),
           ),
           if (isAdmin) ...[
             ListTile(

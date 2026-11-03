@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/widgets/state_views.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/widgets/user_avatar.dart';
 import '../../../models/group.dart';
 import '../../../models/profile.dart';
@@ -37,9 +38,7 @@ class _FollowSuggestionsStepState extends ConsumerState<FollowSuggestionsStep> {
     } catch (e) {
       if (!mounted) return;
       setState(() => on ? set.remove(id) : set.add(id));
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+      showErrorSnack(context, e);
     } finally {
       _pending.remove(id);
     }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/theme/booksquad_ui.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../core/widgets/user_avatar.dart';
@@ -10,8 +11,8 @@ import '../../../models/group.dart';
 import '../../../models/profile.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../books/providers/books_provider.dart';
-import '../../social/providers/paged_posts.dart';
 import '../../../repositories/follow_repository.dart';
+import '../../social/follow_actions.dart';
 import '../../social/providers/social_providers.dart';
 import '../../../core/widgets/verified_badge.dart';
 
@@ -75,19 +76,9 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     }
   }
 
-  Future<void> _toggleFollow(String userId, bool following) async {
-    final user = ref.read(currentUserProvider);
-    if (user == null) return;
-    final repo = ref.read(followRepositoryProvider);
+  Future<void> _toggleFollow(String userId, FollowState state) async {
     try {
-      if (following) {
-        await repo.unfollow(followerId: user.id, followingId: userId);
-      } else {
-        await repo.follow(followerId: user.id, followingId: userId);
-      }
-      ref.invalidate(discoverPeopleProvider);
-      ref.invalidate(followStateProvider(userId));
-      ref.invalidate(pagedPostsProvider);
+      await toggleFollow(ref, userId, state);
     } catch (e) {
       _showError(e);
     }
@@ -95,9 +86,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
   void _showError(Object e) {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+    showErrorSnack(context, e);
   }
 
   @override
@@ -271,7 +260,7 @@ class _PersonRow extends ConsumerWidget {
   const _PersonRow({required this.profile, required this.onToggleFollow});
 
   final Profile profile;
-  final Future<void> Function(String userId, bool following) onToggleFollow;
+  final Future<void> Function(String userId, FollowState state) onToggleFollow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -328,8 +317,7 @@ class _PersonRow extends ConsumerWidget {
                 ),
                 error: (_, _) => const SizedBox.shrink(),
                 data: (state) => TinyPill(
-                  onTap: () =>
-                      onToggleFollow(profile.id, state != FollowState.none),
+                  onTap: () => onToggleFollow(profile.id, state),
                   label: switch (state) {
                     FollowState.following => 'Entfolgen',
                     FollowState.requested => 'Angefragt',

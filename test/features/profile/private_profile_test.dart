@@ -13,7 +13,10 @@ void main() {
   test('is_private is read from the profile row', () {
     final json = {'id': 'p', 'username': 'leise', 'is_private': true};
     expect(Profile.fromJson(json).isPrivate, isTrue);
-    expect(Profile.fromJson({'id': 'q', 'username': 'laut'}).isPrivate, isFalse);
+    expect(
+      Profile.fromJson({'id': 'q', 'username': 'laut'}).isPrivate,
+      isFalse,
+    );
   });
 
   testWidgets('locked private profile shows only the header', (tester) async {

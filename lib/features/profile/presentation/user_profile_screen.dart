@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/moderation_actions.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../repositories/follow_repository.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../books/providers/books_provider.dart';
 import '../../messages/providers/messages_providers.dart';
 import '../../social/providers/paged_posts.dart';
+import '../../social/follow_actions.dart';
 import '../../social/providers/social_providers.dart';
 import 'profile_layout.dart';
 
@@ -20,27 +22,12 @@ class UserProfileScreen extends ConsumerWidget {
   Future<void> _toggleFollow(
     BuildContext context,
     WidgetRef ref,
-    String currentUserId,
     FollowState state,
   ) async {
-    final repo = ref.read(followRepositoryProvider);
     try {
-      if (state == FollowState.none) {
-        await repo.follow(followerId: currentUserId, followingId: userId);
-      } else {
-        await repo.unfollow(followerId: currentUserId, followingId: userId);
-      }
-      ref.invalidate(followStateProvider(userId));
-      ref.invalidate(canMessageProvider(userId));
-      ref.invalidate(bookshelfByUserProvider(userId));
-      ref.invalidate(profileStatsProvider(userId));
-      ref.invalidate(pagedPostsProvider);
-      ref.invalidate(activityProvider);
+      await toggleFollow(ref, userId, state);
     } catch (e) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+      if (context.mounted) showErrorSnack(context, e);
     }
   }
 
@@ -52,9 +39,7 @@ class UserProfileScreen extends ConsumerWidget {
       if (context.mounted) context.push('/messages/$id?with=$userId');
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+      showErrorSnack(context, e);
     }
   }
 
@@ -155,12 +140,8 @@ class UserProfileScreen extends ConsumerWidget {
                                       style: FilledButton.styleFrom(
                                         minimumSize: const Size(0, 40),
                                       ),
-                                      onPressed: () => _toggleFollow(
-                                        context,
-                                        ref,
-                                        currentUser.id,
-                                        state,
-                                      ),
+                                      onPressed: () =>
+                                          _toggleFollow(context, ref, state),
                                       child: Text(
                                         data.isPrivate
                                             ? 'Folgen anfragen'
@@ -171,12 +152,8 @@ class UserProfileScreen extends ConsumerWidget {
                                       style: OutlinedButton.styleFrom(
                                         minimumSize: const Size(0, 40),
                                       ),
-                                      onPressed: () => _toggleFollow(
-                                        context,
-                                        ref,
-                                        currentUser.id,
-                                        state,
-                                      ),
+                                      onPressed: () =>
+                                          _toggleFollow(context, ref, state),
                                       child: Text(
                                         state == FollowState.requested
                                             ? 'Angefragt'
