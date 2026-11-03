@@ -18,10 +18,8 @@ class SocialSignInButtons extends ConsumerStatefulWidget {
   static bool get _apple => Platform.isIOS && Env.isAppleEnabled;
 
   /// Notice text naming exactly the providers shown, e.g. 'Mit der Anmeldung über Apple akzeptierst du unsere '.
-  static String get termsNoticePrefix => socialTermsNoticePrefix(
-    apple: _apple,
-    google: Env.isGoogleConfigured,
-  );
+  static String get termsNoticePrefix =>
+      socialTermsNoticePrefix(apple: _apple, google: Env.isGoogleConfigured);
 
   @override
   ConsumerState<SocialSignInButtons> createState() =>

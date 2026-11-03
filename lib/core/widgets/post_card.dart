@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/providers/auth_provider.dart';
+import 'snack.dart';
 import '../../features/social/providers/like_overrides.dart';
 import '../../models/post.dart';
 import '../../repositories/open_library_repository.dart';
@@ -31,9 +32,7 @@ class PostCard extends ConsumerWidget {
           .toggle(post, userId: user.id);
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+      showErrorSnack(context, e);
     }
   }
 

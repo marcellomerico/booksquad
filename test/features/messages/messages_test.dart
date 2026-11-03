@@ -12,7 +12,6 @@ import 'package:booksquad/repositories/message_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 import '../../helpers/auth_fixtures.dart';
 
@@ -81,9 +80,6 @@ List<Override> _overrides(_FakeMessages repo) => [
 ];
 
 void main() {
-  // Older messages show a date, which needs the German locale data.
-  setUpAll(() => initializeDateFormatting('de'));
-
   testWidgets('inbox marks unread conversations', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -148,7 +144,10 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Noch keine Lesekreise'), findsOneWidget);
-    expect(find.bySemanticsLabel(RegExp('Nachrichten, ungelesen')), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp('Nachrichten, ungelesen')),
+      findsOneWidget,
+    );
 
     await tester.fling(find.byType(TabBarView), const Offset(-400, 0), 1500);
     await tester.pumpAndSettle();

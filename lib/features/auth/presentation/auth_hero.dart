@@ -47,13 +47,7 @@ class AuthShelfHero extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF4A3122),
-                  Color(0xFF5A3B28),
-                  Color(0xFF4A3122),
-                ],
-              ),
+              gradient: LinearGradient(colors: Walnut.side),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -66,11 +60,7 @@ class AuthShelfHero extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       stops: [0, 0.35, 1],
-                      colors: [
-                        Color(0xFF140D09),
-                        Color(0xFF2A1C14),
-                        Color(0xFF221710),
-                      ],
+                      colors: Walnut.backWall,
                     ),
                   ),
                   child: _LampGlow(
@@ -108,11 +98,7 @@ class AuthShelfHero extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       stops: [0, 0.35, 1],
-                      colors: [
-                        Color(0xFF7A5238),
-                        Color(0xFF5E3E2A),
-                        Color(0xFF3E281A),
-                      ],
+                      colors: Walnut.board,
                     ),
                   ),
                   child: Container(
@@ -125,13 +111,13 @@ class AuthShelfHero extends StatelessWidget {
                       gradient: const LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Color(0xFFE6C77A), Color(0xFFB48A3A)],
+                        colors: Walnut.brass,
                       ),
                     ),
                     child: const Text(
                       'BOOKSQUAD',
                       style: TextStyle(
-                        color: Color(0xFF2A1A10),
+                        color: Walnut.engraving,
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 2.4,

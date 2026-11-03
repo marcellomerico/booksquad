@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/theme/booksquad_ui.dart';
 import '../../../core/utils/time_ago.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../core/widgets/user_avatar.dart';
 import '../../../models/profile.dart';
-import '../../auth/providers/auth_provider.dart';
 import '../../social/providers/social_providers.dart';
 
 class ActivityScreen extends ConsumerWidget {
@@ -133,9 +133,7 @@ class _FollowRequestTile extends ConsumerWidget {
       if (accept) ref.invalidate(activityProvider);
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+      showErrorSnack(context, e);
     }
   }
 

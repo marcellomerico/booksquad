@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/theme/booksquad_ui.dart';
 import '../../../core/widgets/paged_post_list.dart';
 import '../../../core/widgets/state_views.dart';
@@ -83,32 +85,17 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
   }
 
   Future<void> _remove(UserBook entry) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog.adaptive(
-        title: Text(
-          entry.status.onShelf
-              ? 'Aus dem Regal entfernen?'
-              : 'Von der Wunschliste entfernen?',
-        ),
-        content: Text(
-          entry.status.onShelf
-              ? 'Das Buch wird aus deinem Bücherregal entfernt.'
-              : 'Das Buch wird von deiner Wunschliste entfernt.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Abbrechen'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Entfernen'),
-          ),
-        ],
-      ),
+    final confirmed = await confirmDialog(
+      context,
+      title: entry.status.onShelf
+          ? 'Aus dem Regal entfernen?'
+          : 'Von der Wunschliste entfernen?',
+      body: entry.status.onShelf
+          ? 'Das Buch wird aus deinem Bücherregal entfernt.'
+          : 'Das Buch wird von deiner Wunschliste entfernt.',
+      confirmLabel: 'Entfernen',
     );
-    if (confirmed != true || !mounted) return;
+    if (!confirmed || !mounted) return;
     final container = ProviderScope.containerOf(context, listen: false);
     setState(() => _busy = true);
     try {
@@ -123,9 +110,7 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
 
   void _showError(Object e) {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+    showErrorSnack(context, e);
   }
 
   Future<void> _refresh(Book? book) async {

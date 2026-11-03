@@ -129,7 +129,4 @@ class ModerationRepository {
         'admin_resolve_verification',
         params: {'p_request_id': requestId, 'p_approve': approve},
       );
-
-  Future<void> revokeVerification(String userId) =>
-      _client.rpc('admin_revoke_verification', params: {'p_user_id': userId});
 }

@@ -27,6 +27,24 @@ class Profile {
 
   bool get isVerified => verifiedAt != null;
 
+  Profile copyWith({
+    String? username,
+    String? displayName,
+    String? bio,
+    bool? onboardingCompleted,
+    bool? isPrivate,
+  }) => Profile(
+    id: id,
+    username: username ?? this.username,
+    displayName: displayName ?? this.displayName,
+    bio: bio ?? this.bio,
+    avatarUrl: avatarUrl,
+    onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+    verifiedAt: verifiedAt,
+    verifiedKind: verifiedKind,
+    isPrivate: isPrivate ?? this.isPrivate,
+  );
+
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile(
       id: json['id'] as String,

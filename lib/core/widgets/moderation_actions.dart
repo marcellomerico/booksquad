@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'confirm_dialog.dart';
 import '../constants/app_config.dart';
+import 'snack.dart';
 import '../../features/auth/providers/auth_provider.dart';
 import '../../features/social/providers/paged_posts.dart';
 import '../../features/social/providers/social_providers.dart';
@@ -82,33 +84,14 @@ Future<void> _blockUser(
   }
 }
 
-Future<bool> _confirmDelete(
-  BuildContext context,
-  String title,
-  String body,
-) async {
-  final confirmed = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog.adaptive(
-      title: Text(title),
-      content: Text(body),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: const Text('Abbrechen'),
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: Theme.of(context).colorScheme.error,
-          ),
-          onPressed: () => Navigator.pop(context, true),
-          child: const Text('Löschen'),
-        ),
-      ],
-    ),
-  );
-  return confirmed == true;
-}
+Future<bool> _confirmDelete(BuildContext context, String title, String body) =>
+    confirmDialog(
+      context,
+      title: title,
+      body: body,
+      confirmLabel: 'Löschen',
+      destructive: true,
+    );
 
 Future<void> showPostActionsMenu(
   BuildContext context,
@@ -169,9 +152,7 @@ Future<void> showPostActionsMenu(
       await ref.read(postRepositoryProvider).deletePost(post.id);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+        showErrorSnack(context, e);
       }
       return;
     }
@@ -301,9 +282,7 @@ Future<void> showCommentActionsMenu(
       await onDelete();
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+        showErrorSnack(context, e);
       }
     }
   } else if (action == 'report') {

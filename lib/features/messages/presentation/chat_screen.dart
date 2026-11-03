@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/snack.dart';
 import '../../../core/widgets/moderation_actions.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../models/message.dart';
@@ -45,9 +46,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       _input.clear();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(authErrorMessage(e))));
+        showErrorSnack(context, e);
       }
     } finally {
       if (mounted) setState(() => _sending = false);

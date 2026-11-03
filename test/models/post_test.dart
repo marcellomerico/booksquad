@@ -1,11 +1,9 @@
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:booksquad/core/utils/time_ago.dart';
 import 'package:booksquad/models/post.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUpAll(() => initializeDateFormatting('de'));
   hiddenAtTests();
   group('PostType', () {
     test('fromDb maps review', () {

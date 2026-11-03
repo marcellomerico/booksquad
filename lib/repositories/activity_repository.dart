@@ -18,7 +18,7 @@ class ActivityRepository {
       _client
           .from('likes')
           .select(
-            'created_at, post_id, profiles:user_id(*), posts!inner(author_id, content)',
+            'created_at, post_id, profiles:user_id(*), posts!inner(author_id)',
           )
           .eq('posts.author_id', userId)
           .neq('user_id', userId)
@@ -27,7 +27,7 @@ class ActivityRepository {
       _client
           .from('comments')
           .select(
-            'created_at, post_id, content, profiles!comments_author_id_fkey(*), posts!inner(author_id)',
+            'created_at, post_id, profiles!comments_author_id_fkey(*), posts!inner(author_id)',
           )
           .eq('posts.author_id', userId)
           .neq('author_id', userId)
@@ -47,14 +47,12 @@ class ActivityRepository {
     for (final row in likes) {
       final profileJson = row['profiles'];
       if (profileJson is! Map<String, dynamic>) continue;
-      final post = row['posts'];
       items.add(
         ActivityItem(
           type: ActivityType.like,
           createdAt: DateTime.parse(row['created_at'] as String),
           actor: Profile.fromJson(profileJson),
           postId: row['post_id'] as String,
-          postPreview: post is Map ? post['content'] as String? : null,
         ),
       );
     }
@@ -68,7 +66,6 @@ class ActivityRepository {
           createdAt: DateTime.parse(row['created_at'] as String),
           actor: Profile.fromJson(profileJson),
           postId: row['post_id'] as String?,
-          postPreview: row['content'] as String?,
         ),
       );
     }

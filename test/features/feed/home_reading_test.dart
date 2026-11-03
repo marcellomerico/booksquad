@@ -36,7 +36,11 @@ const _reading = UserBook(
   status: BookStatus.reading,
   pageCount: 320,
   currentPage: 160,
-  book: Book(id: 'b1', title: 'Die Mitternachtsbibliothek', author: 'Matt Haig'),
+  book: Book(
+    id: 'b1',
+    title: 'Die Mitternachtsbibliothek',
+    author: 'Matt Haig',
+  ),
 );
 
 Future<_FakeProfiles> _pump(
@@ -68,7 +72,10 @@ void main() {
       'finished_this_year': 5,
       'goal': 20,
     });
-    expect((s.streak, s.week.last, s.finishedThisYear, s.goal), (3, true, 5, 20));
+    expect(
+      (s.streak, s.week.last, s.finishedThisYear, s.goal),
+      (3, true, 5, 20),
+    );
   });
 
   test('greeting follows the time of day', () {

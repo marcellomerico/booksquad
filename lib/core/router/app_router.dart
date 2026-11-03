@@ -16,6 +16,7 @@ import '../../features/feed/presentation/activity_screen.dart';
 import '../../features/feed/presentation/post_detail_screen.dart';
 import '../../features/feed/presentation/main_shell.dart';
 import '../../features/moderation/presentation/moderation_queue_screen.dart';
+import '../../features/profile/presentation/blocked_screen.dart';
 import '../../features/profile/presentation/edit_profile_screen.dart';
 import '../../features/profile/presentation/follow_list_screen.dart';
 import '../../features/profile/presentation/settings_screen.dart';
@@ -117,6 +118,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           key: state.pageKey,
           child: const VerificationScreen(),
         ),
+      ),
+      GoRoute(
+        path: '/settings/blocked',
+        pageBuilder: (context, state) =>
+            slidePushPage(key: state.pageKey, child: const BlockedScreen()),
       ),
       GoRoute(
         path: '/settings',

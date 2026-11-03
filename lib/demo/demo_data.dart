@@ -670,15 +670,12 @@ class DemoStore {
         createdAt: ago(minutes: 6),
         actor: profiles['u-lena']!,
         postId: 'p5',
-        postPreview: 'Der Schwarm hat mich wochenlang nicht losgelassen.',
       ),
       ActivityItem(
         type: ActivityType.comment,
         createdAt: ago(hours: 1),
         actor: profiles['u-felix']!,
         postId: 'p5',
-        postPreview:
-            'Das Buch hat mir den Urlaub am Strand ruiniert. Im besten Sinne.',
       ),
       ActivityItem(
         type: ActivityType.follow,
@@ -690,7 +687,6 @@ class DemoStore {
         createdAt: ago(hours: 5),
         actor: profiles['u-jonas']!,
         postId: 'p5',
-        postPreview: 'Der Schwarm hat mich wochenlang nicht losgelassen.',
       ),
       ActivityItem(
         type: ActivityType.follow,

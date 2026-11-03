@@ -18,12 +18,12 @@ const _spineColors = [
   Color(0xFF1F2A44), // midnight
 ];
 
-/// Stable per book, so a spine keeps its look between visits.
-/// Stable cloth colour for a book, shared by spines and the to-read stack.
+/// Stable cloth colour for a book, shared by spines, covers without image and the to-read stack.
 Color spineColor(String bookId) =>
-    _spineColors[_hash(bookId) % _spineColors.length];
+    _spineColors[stableHash(bookId) % _spineColors.length];
 
-int _hash(String s) {
+/// Same value on every run (unlike [String.hashCode]), so a book keeps its look.
+int stableHash(String s) {
   var h = 0;
   for (final u in s.codeUnits) {
     h = (h * 31 + u) & 0x7fffffff;
@@ -33,7 +33,7 @@ int _hash(String s) {
 
 /// Spine size from the page count (else stable per book): width ~ thickness.
 Size spineSize(UserBook entry, double maxHeight) {
-  final h = _hash(entry.bookId);
+  final h = stableHash(entry.bookId);
   final pages = entry.pageCount;
   final width = pages != null
       ? (14 + pages / 14).clamp(18.0, 54.0)
@@ -51,7 +51,7 @@ class BookSpine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final h = _hash(entry.bookId);
+    final h = stableHash(entry.bookId);
     final base = spineColor(entry.bookId);
     final light = base.computeLuminance() > 0.45;
     final ink = light ? const Color(0xFF2B2321) : const Color(0xFFE9D9A6);
@@ -206,4 +206,27 @@ List<List<(UserBook, Size)>> spineRows(
     rows.last.add((e, size));
   }
   return rows;
+}
+
+/// Walnut library furniture, the same in light and dark like a real bookcase.
+abstract final class Walnut {
+  static const crown = [
+    Color(0xFF6A4630),
+    Color(0xFF4A3122),
+    Color(0xFF3A2619),
+  ];
+  static const side = [Color(0xFF4A3122), Color(0xFF5A3B28), Color(0xFF4A3122)];
+  static const plinth = [Color(0xFF3A2619), Color(0xFF24170F)];
+  static const backWall = [
+    Color(0xFF140D09),
+    Color(0xFF2A1C14),
+    Color(0xFF221710),
+  ];
+  static const board = [
+    Color(0xFF7A5238),
+    Color(0xFF5E3E2A),
+    Color(0xFF3E281A),
+  ];
+  static const brass = [Color(0xFFE6C77A), Color(0xFFB48A3A)];
+  static const engraving = Color(0xFF2A1A10);
 }
