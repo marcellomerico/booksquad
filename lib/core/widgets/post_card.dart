@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/providers/auth_provider.dart';
+import '../../features/social/providers/social_providers.dart';
 import 'snack.dart';
 import '../../features/social/providers/like_overrides.dart';
 import '../../models/post.dart';
@@ -156,27 +157,8 @@ class PostCard extends ConsumerWidget {
                       ),
               ),
             ],
-            if (post.imageUrl != null && post.imageUrl!.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Semantics(
-                  image: true,
-                  label: 'Bild zum Beitrag',
-                  child: CachedNetworkImage(
-                    imageUrl: post.imageUrl!,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: 180,
-                    memCacheWidth: _memWidth(
-                      context,
-                      MediaQuery.sizeOf(context).width,
-                      1080,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            if (post.imageUrl != null && post.imageUrl!.isNotEmpty)
+              _PostImage(imageUrl: post.imageUrl!),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -412,4 +394,39 @@ class _QuoteText extends StatelessWidget {
       ),
     ),
   );
+}
+
+class _PostImage extends ConsumerWidget {
+  const _PostImage({required this.imageUrl});
+
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final signed = ref.watch(postImageUrlProvider(imageUrl)).valueOrNull;
+    if (signed == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Semantics(
+          image: true,
+          label: 'Bild zum Beitrag',
+          child: CachedNetworkImage(
+            imageUrl: signed,
+            // Signed URLs change; cache by the stable object URL.
+            cacheKey: imageUrl,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 180,
+            memCacheWidth: _memWidth(
+              context,
+              MediaQuery.sizeOf(context).width,
+              1080,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
