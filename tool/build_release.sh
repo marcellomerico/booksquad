@@ -30,7 +30,7 @@ if [[ "$anon" == eyJ* ]]; then
 fi
 
 if [[ "$platform" == "android" ]]; then
-  [[ -f android/key.properties ]] || fail "android/key.properties missing (see docs/RELEASE.md)"
+  [[ -f android/key.properties ]] || fail "android/key.properties missing (see the release notes)"
 else
   ios_id=$(grep '^GOOGLE_IOS_CLIENT_ID=' .env | cut -d= -f2- | sed 's/\.apps\.googleusercontent\.com$//')
   if [[ -n "$ios_id" ]]; then

@@ -1,4 +1,0 @@
-storePassword=CHANGE_ME
-keyPassword=CHANGE_ME
-keyAlias=booksquad
-storeFile=../booksquad-release.jks
