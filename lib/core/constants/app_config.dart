@@ -3,7 +3,7 @@ class AppConfig {
   AppConfig._();
 
   static const supportEmail = 'support@booksquad.de';
-  // Hosted on Netlify from site/ (docs/RELEASE.md).
+  // Static legal pages from site/.
   static const _legalBase = 'https://booksquad.de';
   static const privacyPolicyUrl = '$_legalBase/privacy.html';
   static const termsUrl = '$_legalBase/terms.html';

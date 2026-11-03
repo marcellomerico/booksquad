@@ -21,7 +21,6 @@ migrate_working_dir/
 # VS Code / Cursor
 .vscode/*
 !.vscode/settings.json
-!.vscode/launch.json
 
 # Flutter/Dart
 .dart_tool/
@@ -85,7 +84,6 @@ app.*.map.json
 # Secrets
 .env
 .env.*
-!.env.example
 
 # Supabase local
 .supabase/

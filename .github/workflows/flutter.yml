@@ -18,8 +18,8 @@ jobs:
         with:
           channel: stable
           flutter-version: 3.44.5
-      # .env is a bundled asset but gitignored; placeholder values keep Env.isConfigured false.
-      - run: cp .env.example .env
+      # .env is a bundled asset but gitignored; empty values keep Env.isConfigured false.
+      - run: printf 'SUPABASE_URL=\nSUPABASE_ANON_KEY=\n' > .env
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
@@ -37,6 +37,6 @@ jobs:
         with:
           channel: stable
           flutter-version: 3.44.5
-      - run: cp .env.example .env
+      - run: printf 'SUPABASE_URL=\nSUPABASE_ANON_KEY=\n' > .env
       - run: flutter pub get
       - run: flutter build apk --debug
