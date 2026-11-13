@@ -10,6 +10,9 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-4000-8000-00000000000c', 'carol@rls.test', '{"username":"Alice_RLS"}'),
   ('00000000-0000-4000-8000-00000000000d', null,             null),
   ('00000000-0000-4000-8000-00000000000e', 'erin@rls.test',  '{"username":"erinerinerinerinerinerinerinerinerinerin"}');
+-- Established accounts: only their reports count for auto-hide.
+update auth.users set created_at = now() - interval '30 days', email_confirmed_at = now() - interval '30 days'
+where id::text like '00000000-0000-4000-8000-00000000000_';
 
 insert into public.groups (id, creator_id, name, is_private, invite_code) values
   ('00000000-0000-4000-8000-0000000001a0', '00000000-0000-4000-8000-00000000000a', 'Geheimzirkel', true, 'testcode01'),
@@ -35,7 +38,7 @@ insert into public.comments (id, post_id, author_id, content) values
 insert into public.likes (post_id, user_id) values
   ('00000000-0000-4000-8000-0000000002a0', '00000000-0000-4000-8000-00000000000a');
 insert into private.admins (user_id) values ('00000000-0000-4000-8000-00000000000a');
-update public.posts set image_url = 'https://example.supabase.co/storage/v1/object/public/post-images/a/x.jpg'
+update public.posts set image_url = 'https://example.supabase.co/storage/v1/object/public/post-images/00000000-0000-4000-8000-00000000000a/x.jpg'
 where id = '00000000-0000-4000-8000-0000000002d2';
 
 -- ---------------- signup trigger (as postgres) ----------------
@@ -400,7 +403,7 @@ begin
   select o.report_id into rid from public.admin_open_reports() o where o.target_post_id = '00000000-0000-4000-8000-0000000002d2';
   if rid is null then raise exception 'FAIL: admin does not see report on hide target'; end if;
   if (select o.target_image_url from public.admin_open_reports() o where o.report_id = rid) is distinct from
-     'https://example.supabase.co/storage/v1/object/public/post-images/a/x.jpg' then
+     'https://example.supabase.co/storage/v1/object/public/post-images/00000000-0000-4000-8000-00000000000a/x.jpg' then
     raise exception 'FAIL: admin_open_reports lacks target_image_url'; end if;
   perform public.admin_resolve_report(rid, 'hide');
   rid := null;
