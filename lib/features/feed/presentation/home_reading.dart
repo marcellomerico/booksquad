@@ -232,14 +232,19 @@ class ReadingStatsRow extends ConsumerWidget {
         ref.watch(readingStatsProvider).valueOrNull ?? ReadingStats.empty;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: _StreakCard(stats: stats)),
-            const SizedBox(width: 12),
-            Expanded(child: _GoalCard(stats: stats)),
-          ],
+      // Two cards side by side can't grow with very large system text; the
+      // numbers are already big, so scaling stops at 1.3.
+      child: MediaQuery.withClampedTextScaling(
+        maxScaleFactor: 1.3,
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: _StreakCard(stats: stats)),
+              const SizedBox(width: 12),
+              Expanded(child: _GoalCard(stats: stats)),
+            ],
+          ),
         ),
       ),
     );
@@ -283,13 +288,18 @@ class _StreakCard extends StatelessWidget {
                       color: p.gold,
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      'LESE-SERIE',
-                      style: TextStyle(
-                        color: p.onAccentSurface,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'LESE-SERIE',
+                          style: TextStyle(
+                            color: p.onAccentSurface,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1,
+                          ),
+                        ),
                       ),
                     ),
                   ],

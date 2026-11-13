@@ -20,12 +20,22 @@ class MessageRepository {
           as String;
 
   /// Live list, oldest first. RLS limits it to members.
+  // shortcut: only the newest 200 messages, add paging when chats get longer.
   Stream<List<Message>> watchMessages(String conversationId) => _client
       .from('messages')
       .stream(primaryKey: ['id'])
       .eq('conversation_id', conversationId)
-      .order('created_at')
-      .map((rows) => rows.map(Message.fromJson).toList());
+      .order('created_at', ascending: false)
+      .limit(200)
+      .map((rows) => rows.reversed.map(Message.fromJson).toList());
+
+  /// Fires whenever a message the user may see is added (RLS applies).
+  Stream<void> watchInbox() => _client
+      .from('messages')
+      .stream(primaryKey: ['id'])
+      .order('created_at', ascending: false)
+      .limit(1)
+      .skip(1); // the first event is the initial snapshot
 
   Future<void> send(String conversationId, String body) async {
     await _client.from('messages').insert({

@@ -707,6 +707,9 @@ class _DemoMessages extends MessageRepository {
   final _live = <String, StreamController<List<Message>>>{};
 
   @override
+  Stream<void> watchInbox() => const Stream.empty();
+
+  @override
   Future<List<ConversationSummary>> getConversations() async {
     final rows = [
       for (final e in _store.chats.entries)

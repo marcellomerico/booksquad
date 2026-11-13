@@ -11,7 +11,14 @@ final messageRepositoryProvider = Provider<MessageRepository>((ref) {
 final conversationsProvider =
     FutureProvider.autoDispose<List<ConversationSummary>>((ref) async {
       if (ref.watch(currentUserProvider) == null) return [];
-      return ref.watch(messageRepositoryProvider).getConversations();
+      final repo = ref.watch(messageRepositoryProvider);
+      // New message anywhere: reload, so the unread dot appears without a restart.
+      final sub = repo.watchInbox().listen(
+        (_) => ref.invalidateSelf(),
+        onError: (_) {},
+      );
+      ref.onDispose(sub.cancel);
+      return repo.getConversations();
     });
 
 final hasUnreadMessagesProvider = Provider.autoDispose<bool>(

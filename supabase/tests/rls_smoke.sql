@@ -760,6 +760,24 @@ do $$ begin
     raise exception 'FAIL: outsider marked a conversation read'; end if;
 end $$;
 
+-- a post can't point at someone else's image, and an old read doesn't count for the goal
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000010","role":"authenticated"}', true);
+do $$ begin
+  begin
+    insert into public.posts (author_id, content, image_url) values
+      ('00000000-0000-4000-8000-000000000010', 'geklaut',
+       'https://example.supabase.co/storage/v1/object/public/post-images/00000000-0000-4000-8000-00000000000f/abcdef.jpg');
+    raise exception 'FAIL: post references a foreign image';
+  exception when check_violation then null;
+  end;
+  insert into public.user_books (user_id, book_id, status) values
+    ('00000000-0000-4000-8000-000000000010', '00000000-0000-4000-8000-0000000004d0', 'read');
+  if (select finished_this_year from public.my_reading_stats()) <> 0 then
+    raise exception 'FAIL: book added as read counts for this year'; end if;
+end $$;
+reset role;
+
 -- three brand-new accounts can't hide a post any more
 insert into public.posts (id, author_id, group_id, content) values
   ('00000000-0000-4000-8000-0000000002fa', '00000000-0000-4000-8000-000000000010', null, 'nicht verstecken');
