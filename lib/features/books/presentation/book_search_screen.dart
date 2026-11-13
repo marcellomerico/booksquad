@@ -143,6 +143,7 @@ class _BookSearchScreenState extends ConsumerState<BookSearchScreen> {
                   width: 42,
                   height: 42,
                   child: IconButton.filled(
+                    tooltip: 'Suchen',
                     onPressed: _searching ? null : _search,
                     icon: _searching
                         ? SizedBox(

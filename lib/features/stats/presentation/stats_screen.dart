@@ -95,103 +95,110 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
           ref.invalidate(bookshelfProvider);
           await ref.read(readingDaysProvider.future);
         },
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
-          children: [
-            SegmentedButton<_Period>(
-              segments: const [
-                ButtonSegment(value: _Period.week, label: Text('Woche')),
-                ButtonSegment(value: _Period.month, label: Text('Monat')),
-                ButtonSegment(value: _Period.year, label: Text('Jahr')),
-              ],
-              selected: {_period},
-              showSelectedIcon: false,
-              onSelectionChanged: (s) => setState(() => _period = s.first),
-            ),
-            const SizedBox(height: 14),
-            Reveal(
-              key: ValueKey('kpi-$_period'),
-              index: 0,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _Kpi(value: pages, label: 'Seiten'),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _Kpi(
-                      value: books,
-                      label: books == 1 ? 'Buch' : 'Bücher',
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _Kpi(
-                      value: (pages / elapsed).round(),
-                      label: 'Seiten/Tag',
-                    ),
-                  ),
+        // Charts and three-up tiles don't reflow; cap very large system text.
+        child: MediaQuery.withClampedTextScaling(
+          maxScaleFactor: 1.4,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
+            children: [
+              SegmentedButton<_Period>(
+                segments: const [
+                  ButtonSegment(value: _Period.week, label: Text('Woche')),
+                  ButtonSegment(value: _Period.month, label: Text('Monat')),
+                  ButtonSegment(value: _Period.year, label: Text('Jahr')),
                 ],
+                selected: {_period},
+                showSelectedIcon: false,
+                onSelectionChanged: (s) => setState(() => _period = s.first),
               ),
-            ),
-            const SizedBox(height: 12),
-            Reveal(
-              key: ValueKey('chart-$_period'),
-              index: 1,
-              child: SoftCard(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 14),
+              Reveal(
+                key: ValueKey('kpi-$_period'),
+                index: 0,
+                child: Row(
                   children: [
-                    Text(chartTitle, style: _cardTitle(context)),
-                    const SizedBox(height: 14),
-                    _BarChart(
-                      values: values,
-                      labels: labels,
-                      highlight: highlight,
+                    Expanded(
+                      child: _Kpi(value: pages, label: 'Seiten'),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _Kpi(
+                        value: books,
+                        label: books == 1 ? 'Buch' : 'Bücher',
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _Kpi(
+                        value: (pages / elapsed).round(),
+                        label: 'Seiten/Tag',
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Reveal(
-              index: 2,
-              child: SoftCard(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 12),
+              Reveal(
+                key: ValueKey('chart-$_period'),
+                index: 1,
+                child: SoftCard(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(chartTitle, style: _cardTitle(context)),
+                      const SizedBox(height: 14),
+                      _BarChart(
+                        values: values,
+                        labels: labels,
+                        highlight: highlight,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Reveal(
+                index: 2,
+                child: SoftCard(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Lesetage im ${DateFormat.MMMM('de').format(today)}',
+                        style: _cardTitle(context),
+                      ),
+                      const SizedBox(height: 12),
+                      _MonthHeatmap(pages: days, today: today),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Reveal(
+                index: 3,
+                child: Row(
                   children: [
-                    Text(
-                      'Lesetage im ${DateFormat.MMMM('de').format(today)}',
-                      style: _cardTitle(context),
+                    Expanded(
+                      child: _Kpi(
+                        value: stats.streak,
+                        label: 'Tage Serie jetzt',
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    _MonthHeatmap(pages: days, today: today),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _Kpi(
+                        value: math.max(longestStreak(days.keys), stats.streak),
+                        label: 'Längste Serie',
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Reveal(
-              index: 3,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _Kpi(value: stats.streak, label: 'Tage Serie jetzt'),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _Kpi(
-                      value: math.max(longestStreak(days.keys), stats.streak),
-                      label: 'Längste Serie',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

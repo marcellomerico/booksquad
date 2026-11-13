@@ -112,4 +112,25 @@ void main() {
     await tester.pumpAndSettle();
     expect(profiles.goals, [24]);
   });
+
+  testWidgets('streak and goal cards survive very large system text', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(375, 800);
+    tester.platformDispatcher.textScaleFactorTestValue = 2.6;
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearAllTestValues);
+    await _pump(
+      tester,
+      const ReadingStatsRow(),
+      const ReadingStats(
+        streak: 12,
+        week: [true, true, true, true, true, true, false],
+        finishedThisYear: 18,
+        goal: 30,
+      ),
+    );
+    expect(tester.takeException(), isNull);
+  });
 }

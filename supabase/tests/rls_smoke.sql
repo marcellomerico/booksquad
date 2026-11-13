@@ -10,6 +10,9 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-4000-8000-00000000000c', 'carol@rls.test', '{"username":"Alice_RLS"}'),
   ('00000000-0000-4000-8000-00000000000d', null,             null),
   ('00000000-0000-4000-8000-00000000000e', 'erin@rls.test',  '{"username":"erinerinerinerinerinerinerinerinerinerin"}');
+-- Established accounts: only their reports count for auto-hide.
+update auth.users set created_at = now() - interval '30 days', email_confirmed_at = now() - interval '30 days'
+where id::text like '00000000-0000-4000-8000-00000000000_';
 
 insert into public.groups (id, creator_id, name, is_private, invite_code) values
   ('00000000-0000-4000-8000-0000000001a0', '00000000-0000-4000-8000-00000000000a', 'Geheimzirkel', true, 'testcode01'),
@@ -35,7 +38,7 @@ insert into public.comments (id, post_id, author_id, content) values
 insert into public.likes (post_id, user_id) values
   ('00000000-0000-4000-8000-0000000002a0', '00000000-0000-4000-8000-00000000000a');
 insert into private.admins (user_id) values ('00000000-0000-4000-8000-00000000000a');
-update public.posts set image_url = 'https://example.supabase.co/storage/v1/object/public/post-images/a/x.jpg'
+update public.posts set image_url = 'https://example.supabase.co/storage/v1/object/public/post-images/00000000-0000-4000-8000-00000000000a/x.jpg'
 where id = '00000000-0000-4000-8000-0000000002d2';
 
 -- ---------------- signup trigger (as postgres) ----------------
@@ -400,7 +403,7 @@ begin
   select o.report_id into rid from public.admin_open_reports() o where o.target_post_id = '00000000-0000-4000-8000-0000000002d2';
   if rid is null then raise exception 'FAIL: admin does not see report on hide target'; end if;
   if (select o.target_image_url from public.admin_open_reports() o where o.report_id = rid) is distinct from
-     'https://example.supabase.co/storage/v1/object/public/post-images/a/x.jpg' then
+     'https://example.supabase.co/storage/v1/object/public/post-images/00000000-0000-4000-8000-00000000000a/x.jpg' then
     raise exception 'FAIL: admin_open_reports lacks target_image_url'; end if;
   perform public.admin_resolve_report(rid, 'hide');
   rid := null;
@@ -695,6 +698,119 @@ select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-0000000
 do $$ begin
   if exists (select 1 from public.reading_days where user_id = '00000000-0000-4000-8000-00000000000e') then
     raise exception 'FAIL: others see reading days'; end if;
+end $$;
+reset role;
+
+-- Security review (Nov 2026): fresh readers f (private), g (stranger), h (mutual with g, follows f).
+insert into auth.users (id, email, raw_user_meta_data) values
+  ('00000000-0000-4000-8000-00000000000f', 'fiona@rls.test', '{"username":"fiona_rls"}'),
+  ('00000000-0000-4000-8000-000000000010', 'gus@rls.test',   '{"username":"gus_rls"}'),
+  ('00000000-0000-4000-8000-000000000011', 'hana@rls.test',  '{"username":"hana_rls"}');
+update public.profiles set is_private = true where id = '00000000-0000-4000-8000-00000000000f';
+insert into public.follows (follower_id, following_id) values ('00000000-0000-4000-8000-000000000011', '00000000-0000-4000-8000-00000000000f'), ('00000000-0000-4000-8000-000000000010', '00000000-0000-4000-8000-000000000011'), ('00000000-0000-4000-8000-000000000011', '00000000-0000-4000-8000-000000000010');
+insert into storage.objects (bucket_id, name, owner) values
+  ('post-images', '00000000-0000-4000-8000-00000000000f/abcdef.jpg', '00000000-0000-4000-8000-00000000000f');
+insert into public.posts (id, author_id, group_id, content, image_url) values
+  ('00000000-0000-4000-8000-0000000002f9', '00000000-0000-4000-8000-00000000000f', null, 'mit bild',
+   'https://example.supabase.co/storage/v1/object/public/post-images/00000000-0000-4000-8000-00000000000f/abcdef.jpg');
+set local role authenticated;
+
+-- stranger: no image of a private account's post, no view of her followers, but the counts
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000010","role":"authenticated"}', true);
+do $$ begin
+  if exists (select 1 from storage.objects where name like '00000000-0000-4000-8000-00000000000f/%') then
+    raise exception 'FAIL: stranger reads private post image'; end if;
+  if exists (select 1 from public.follows where following_id = '00000000-0000-4000-8000-00000000000f') then
+    raise exception 'FAIL: stranger sees who follows a private account'; end if;
+  if (select followers from public.profile_counts('00000000-0000-4000-8000-00000000000f')) <> 1 then
+    raise exception 'FAIL: follower count hidden'; end if;
+  perform public.follow_user('00000000-0000-4000-8000-00000000000f');
+end $$;
+
+-- follower: sees the image; a third reader can neither see nor answer g's request
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000011","role":"authenticated"}', true);
+do $$ begin
+  if not exists (select 1 from storage.objects where name like '00000000-0000-4000-8000-00000000000f/%') then
+    raise exception 'FAIL: follower misses post image'; end if;
+  if exists (select 1 from public.follow_requests where target_id = '00000000-0000-4000-8000-00000000000f') then
+    raise exception 'FAIL: third party sees follow requests'; end if;
+  begin
+    perform public.respond_follow_request('00000000-0000-4000-8000-000000000010', true);
+    raise exception 'FAIL: non-recipient answered a follow request';
+  exception when no_data_found then null;
+  end;
+end $$;
+
+-- messages: sender_id can't be forged; outsiders can't mark a chat read
+do $$ declare cid uuid; begin
+  cid := public.start_conversation('00000000-0000-4000-8000-000000000010');
+  begin
+    insert into public.messages (conversation_id, body, sender_id) values (cid, 'fake', '00000000-0000-4000-8000-000000000010');
+    raise exception 'FAIL: forged sender_id accepted';
+  exception when insufficient_privilege then null;
+  end;
+  insert into public.messages (conversation_id, body) values (cid, 'echt');
+end $$;
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000000f","role":"authenticated"}', true);
+do $$ begin
+  perform public.mark_conversation_read((select id from public.conversations
+    where user_a = least('00000000-0000-4000-8000-000000000010'::uuid, '00000000-0000-4000-8000-000000000011'::uuid) and user_b = greatest('00000000-0000-4000-8000-000000000010'::uuid, '00000000-0000-4000-8000-000000000011'::uuid)));
+end $$;
+reset role;
+do $$ begin
+  if (select case when user_a = '00000000-0000-4000-8000-000000000010' then a_read_at else b_read_at end from public.conversations
+      where least(user_a, user_b) = least('00000000-0000-4000-8000-000000000010'::uuid, '00000000-0000-4000-8000-000000000011'::uuid)) is not null then
+    raise exception 'FAIL: outsider marked a conversation read'; end if;
+end $$;
+
+-- a post can't point at someone else's image, and an old read doesn't count for the goal
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000010","role":"authenticated"}', true);
+do $$ begin
+  begin
+    insert into public.posts (author_id, content, image_url) values
+      ('00000000-0000-4000-8000-000000000010', 'geklaut',
+       'https://example.supabase.co/storage/v1/object/public/post-images/00000000-0000-4000-8000-00000000000f/abcdef.jpg');
+    raise exception 'FAIL: post references a foreign image';
+  exception when check_violation then null;
+  end;
+  insert into public.user_books (user_id, book_id, status) values
+    ('00000000-0000-4000-8000-000000000010', '00000000-0000-4000-8000-0000000004d0', 'read');
+  if (select finished_this_year from public.my_reading_stats()) <> 0 then
+    raise exception 'FAIL: book added as read counts for this year'; end if;
+end $$;
+reset role;
+
+-- three brand-new accounts can't hide a post any more
+insert into public.posts (id, author_id, group_id, content) values
+  ('00000000-0000-4000-8000-0000000002fa', '00000000-0000-4000-8000-000000000010', null, 'nicht verstecken');
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000000f","role":"authenticated"}', true);
+insert into public.reports (reporter_id, post_id, reason) values ('00000000-0000-4000-8000-00000000000f', '00000000-0000-4000-8000-0000000002fa', 'x');
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000011","role":"authenticated"}', true);
+insert into public.reports (reporter_id, post_id, reason) values ('00000000-0000-4000-8000-000000000011', '00000000-0000-4000-8000-0000000002fa', 'x');
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000000e","role":"authenticated"}', true);
+insert into public.reports (reporter_id, post_id, reason) values ('00000000-0000-4000-8000-00000000000e', '00000000-0000-4000-8000-0000000002fa', 'x');
+reset role;
+do $$ begin
+  if (select hidden_at from public.posts where id = '00000000-0000-4000-8000-0000000002fa') is not null then
+    raise exception 'FAIL: new accounts auto-hid a post'; end if;
+end $$;
+
+-- beta sign-ups: anon may insert only, never read or change
+set local role anon;
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+do $$ begin
+  begin
+    perform 1 from public.beta_signups limit 1;
+    raise exception 'FAIL: anon reads beta sign-ups';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    update public.beta_signups set confirmed_at = now();
+    raise exception 'FAIL: anon confirms beta sign-ups';
+  exception when insufficient_privilege then null;
+  end;
 end $$;
 reset role;
 

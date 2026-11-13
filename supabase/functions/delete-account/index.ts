@@ -1,6 +1,6 @@
 // Deletes the caller's storage files and auth user (Apple 5.1.1(v), GDPR Art. 17).
 // Uses the Storage API: direct SQL deletes on storage.objects orphan files / are blocked.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.118.0';
 
 const BUCKETS = ['avatars', 'post-images'];
 const MAX_BATCHES = 50;

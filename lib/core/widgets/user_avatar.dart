@@ -1,7 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../demo/demo_mode.dart' show kDemoMode;
+import '../config/env.dart';
 import '../theme/app_theme.dart';
+
+/// True for images in our own Supabase storage; anything else is not loaded
+/// (a foreign avatar URL could track who views a profile).
+bool isOwnStorageUrl(String url) {
+  final base = Env.supabaseUrl;
+  return kDemoMode || (base.isNotEmpty && url.startsWith('$base/storage/'));
+}
 
 class UserAvatar extends StatelessWidget {
   const UserAvatar({
@@ -42,7 +51,7 @@ class UserAvatar extends StatelessWidget {
         ? '?'
         : name!.trim().characters.first.toUpperCase();
 
-    if (url != null && url!.isNotEmpty) {
+    if (url != null && isOwnStorageUrl(url!)) {
       return CircleAvatar(
         radius: radius,
         backgroundColor: context.palette.parchment,

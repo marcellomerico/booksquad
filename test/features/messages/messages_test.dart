@@ -31,6 +31,9 @@ class _FakeMessages extends MessageRepository {
   final reads = <String>[];
 
   @override
+  Stream<void> watchInbox() => const Stream.empty();
+
+  @override
   Future<List<ConversationSummary>> getConversations() async => [
     ConversationSummary.fromJson({
       'conversation_id': 'c',

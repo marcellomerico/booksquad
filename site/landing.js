@@ -107,8 +107,8 @@
             consent: true,
           }),
         });
-        if (res.status === 201) return done('Danke! Du bist dabei. Wir melden uns per Mail, sobald die Beta startet. 📚');
-        if (res.status === 409) return done('Du bist schon angemeldet. Wir melden uns, sobald die Beta startet. 📚');
+        // Same answer for new and known addresses: the form must not reveal who signed up.
+        if (res.status === 201 || res.status === 409) return done('Fast geschafft! Bitte bestätige deine Anmeldung über den Link in der Mail, die wir dir gerade geschickt haben. 📚');
         throw new Error(String(res.status));
       } catch {
         button.disabled = false;
