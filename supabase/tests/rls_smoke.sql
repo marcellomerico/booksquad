@@ -797,6 +797,33 @@ do $$ begin
     raise exception 'FAIL: new accounts auto-hid a post'; end if;
 end $$;
 
+-- beta sign-ups: signing up again resends the confirmation (at most 3 mails), never a second row
+insert into public.beta_signups (email, platform, consent, notified_at) values
+  ('again@rls.test', 'ios', true, now() - interval '1 hour'),
+  ('fresh@rls.test', 'ios', true, now());
+set local role anon;
+insert into public.beta_signups (email, platform, consent) values ('Again@rls.test', 'android', true);
+do $$ begin
+  begin -- the resend is still in flight (notified_at is null): plain duplicate
+    insert into public.beta_signups (email, platform, consent) values ('again@rls.test', 'android', true);
+    raise exception 'FAIL: second resend right away';
+  exception when unique_violation then null;
+  end;
+  begin
+    insert into public.beta_signups (email, platform, consent) values ('fresh@rls.test', 'ios', true);
+    raise exception 'FAIL: resend within 10 minutes';
+  exception when unique_violation then null;
+  end;
+end $$;
+reset role;
+do $$ begin
+  if (select count(*) from public.beta_signups where lower(email) = 'again@rls.test') <> 1
+     or (select mails_sent from public.beta_signups where email = 'again@rls.test') <> 2
+     or (select notified_at from public.beta_signups where email = 'again@rls.test') is not null
+     or (select platform from public.beta_signups where email = 'again@rls.test') <> 'ios' then
+    raise exception 'FAIL: beta resend'; end if;
+end $$;
+
 -- beta sign-ups: anon may insert only, never read or change
 set local role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
