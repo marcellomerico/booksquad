@@ -72,6 +72,27 @@
   });
 
   // Beta sign-up: insert-only table in the EU Supabase project (publishable key is public by design).
+  // Cloudflare Turnstile: off while the site key is empty. With a key the form posts to the
+  // beta-signup Edge Function, which checks the token (see supabase/functions/beta-signup).
+  const TURNSTILE_SITE_KEY = '';
+  const SUPABASE = 'https://thkfqvvzldkfxaqehjqn.supabase.co';
+  let turnstileReady;
+  const turnstileToken = async () => {
+    turnstileReady ??= new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.append(s);
+    });
+    await turnstileReady;
+    return new Promise((resolve, reject) => {
+      const box = document.querySelector('.turnstile');
+      box.replaceChildren(); // a token is single-use: fresh widget per attempt
+      window.turnstile.render(box, { sitekey: TURNSTILE_SITE_KEY, callback: resolve, 'error-callback': reject });
+    });
+  };
+
   const form = document.querySelector('.beta-form');
   if (form) {
     const status = form.querySelector('.form-status');
@@ -92,21 +113,28 @@
         form.classList.add('done');
         form.innerHTML = `<p class="beta-done">${text}</p>`;
       };
+      const fields = {
+        first_name: String(f.get('first_name') || '').trim() || null,
+        email,
+        platform,
+        consent: true,
+      };
       try {
-        const res = await fetch('https://thkfqvvzldkfxaqehjqn.supabase.co/rest/v1/beta_signups', {
-          method: 'POST',
-          headers: {
-            apikey: 'sb_publishable_PhO6vCTfihbDamh8t6aM3Q_XcVTJp9d',
-            'Content-Type': 'application/json',
-            Prefer: 'return=minimal',
-          },
-          body: JSON.stringify({
-            first_name: String(f.get('first_name') || '').trim() || null,
-            email,
-            platform,
-            consent: true,
-          }),
-        });
+        const res = TURNSTILE_SITE_KEY
+          ? await fetch(`${SUPABASE}/functions/v1/beta-signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...fields, token: await turnstileToken() }),
+          })
+          : await fetch(`${SUPABASE}/rest/v1/beta_signups`, {
+            method: 'POST',
+            headers: {
+              apikey: 'sb_publishable_PhO6vCTfihbDamh8t6aM3Q_XcVTJp9d',
+              'Content-Type': 'application/json',
+              Prefer: 'return=minimal',
+            },
+            body: JSON.stringify(fields),
+          });
         // Same answer for new and known addresses: the form must not reveal who signed up.
         if (res.status === 201 || res.status === 409) return done('Fast geschafft! Bitte bestätige deine Anmeldung über den Link in der Mail, die wir dir gerade geschickt haben. 📚');
         throw new Error(String(res.status));
