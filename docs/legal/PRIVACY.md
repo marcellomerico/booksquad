@@ -1,7 +1,7 @@
 # Datenschutzerklärung — Booksquad
 
 
-**Stand:** Oktober 2026
+**Stand:** November 2026
 
 ## 1. Verantwortlicher
 
@@ -62,7 +62,7 @@ Die App speichert deine Anmeldesitzung (ein Zugangstoken) auf deinem Gerät, dam
 
 ## 8. Webseite mit diesen Texten
 
-Die Webseite booksquad.de mit diesen Rechtstexten wird über Netlify (Netlify Inc., USA) bereitgestellt. Beim Aufruf verarbeitet Netlify technisch notwendige Verbindungsdaten wie die IP-Adresse in Server-Logs. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (sichere und zuverlässige Bereitstellung). Für Übermittlungen in die USA gelten die Standardvertragsklauseln der EU-Kommission aus dem Auftragsverarbeitungsvertrag von Netlify. Auf der Webseite setzen wir keine Cookies und kein Tracking ein.
+Die Webseite booksquad.de mit diesen Rechtstexten wird über Cloudflare Pages (Cloudflare, Inc., USA) bereitgestellt. Beim Aufruf verarbeitet Cloudflare technisch notwendige Verbindungsdaten wie die IP-Adresse in Server-Logs. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (sichere und zuverlässige Bereitstellung). Cloudflare ist nach dem EU-US Data Privacy Framework zertifiziert; ergänzend gelten die Standardvertragsklauseln der EU-Kommission aus dem Auftragsverarbeitungsvertrag von Cloudflare. Auf der Webseite setzen wir keine Cookies und kein Tracking ein.
 
 ## 9. Beta-Anmeldung auf der Webseite {#beta}
 

@@ -1,4 +1,4 @@
-# Security and cache headers for Cloudflare Pages (same as netlify.toml).
+# Security and cache headers for Cloudflare Pages.
 # Inline script hash = the one-line `js` class toggle in index.html; recompute if it changes.
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
