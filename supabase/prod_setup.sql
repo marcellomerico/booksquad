@@ -2331,4 +2331,12 @@ create trigger beta_signups_resend
   before insert on public.beta_signups
   for each row execute function private.resend_beta_confirmation();
 
+-- ===== 20261114110000_post_image_index.sql =====
+-- The storage policy "Readers see images of visible posts" compares
+-- author_id::text with the object's folder name. Without this index every
+-- image request scans all posts; with it only the author's posts with an image.
+create index if not exists posts_image_author_text_idx
+  on public.posts ((author_id::text))
+  where image_url is not null;
+
 commit;
