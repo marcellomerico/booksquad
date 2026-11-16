@@ -182,7 +182,11 @@ class OpenLibraryRepository {
   Future<List<OpenLibraryBook>> _searchDocs(Map<String, String> params) async {
     final uri = Uri.https('openlibrary.org', '/search.json', {
       ...params,
-      'fields': 'key,title,author_name,cover_i,isbn,number_of_pages_median',
+      // lang makes Open Library pick the best edition in that language per work.
+      'lang': 'de',
+      'fields':
+          'key,title,author_name,cover_i,isbn,number_of_pages_median,'
+          'editions,editions.title,editions.language,editions.cover_i',
     });
 
     final response = await _get(uri);
@@ -199,16 +203,27 @@ class OpenLibraryRepository {
           final key = map['key'] as String? ?? '';
           final authors = map['author_name'] as List<dynamic>?;
           final isbns = map['isbn'] as List<dynamic>?;
+          // German edition if there is one: its title and cover, else the work's.
+          final german = ((map['editions'] as Map?)?['docs'] as List?)
+              ?.whereType<Map>()
+              .where((e) => (e['language'] as List?)?.contains('ger') ?? false)
+              .firstOrNull;
+          final germanTitle = german?['title'];
+          final germanCover = german?['cover_i'];
 
           return OpenLibraryBook(
             openLibraryId: key
                 .replaceFirst('/works/', '')
                 .replaceFirst('/books/', ''),
-            title: map['title'] as String? ?? 'Unbekannter Titel',
+            title: germanTitle is String && germanTitle.trim().isNotEmpty
+                ? germanTitle.trim()
+                : map['title'] as String? ?? 'Unbekannter Titel',
             author: authors?.isNotEmpty == true
                 ? authors!.first as String
                 : null,
-            coverId: map['cover_i'] as int?,
+            coverId: germanCover is int && germanCover > 0
+                ? germanCover
+                : map['cover_i'] as int?,
             isbn: isbns?.isNotEmpty == true ? isbns!.first as String : null,
             pageCount: switch (map['number_of_pages_median']) {
               final int n when n > 0 && n <= 20000 => n,

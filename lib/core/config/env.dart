@@ -24,8 +24,7 @@ class Env {
   static String get turnstileSiteKey => _read('TURNSTILE_SITE_KEY');
 
   static bool get isConfigured =>
-      supabaseUrl.isNotEmpty &&
-      supabaseAnonKey.isNotEmpty;
+      supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 
   static bool get isGoogleConfigured => googleWebClientId.isNotEmpty;
 

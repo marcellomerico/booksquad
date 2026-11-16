@@ -21,12 +21,20 @@ import 'reading_progress_sheet.dart';
 String bookCoverHeroTag(String workId) => 'cover-$workId';
 
 class BookDetailScreen extends ConsumerStatefulWidget {
-  const BookDetailScreen({super.key, required this.workId, this.coverUrl});
+  const BookDetailScreen({
+    super.key,
+    required this.workId,
+    this.coverUrl,
+    this.title,
+  });
 
   final String workId;
 
   /// Cover known by the opening screen: shown at once so the transition lands.
   final String? coverUrl;
+
+  /// Title the search showed (German edition); the work itself is often English.
+  final String? title;
 
   @override
   ConsumerState<BookDetailScreen> createState() => _BookDetailScreenState();
@@ -67,7 +75,7 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
           userId: user.id,
           result: OpenLibraryBook(
             openLibraryId: book?.openLibraryId ?? widget.workId,
-            title: book?.title ?? work.title,
+            title: book?.title ?? widget.title ?? work.title,
             author: book?.author,
             coverId: work.coverId,
             isbn: book?.isbn,
@@ -166,7 +174,12 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(AppSpacing.l),
             children: [
-              _Header(work: work, book: book, workId: widget.workId),
+              _Header(
+                work: work,
+                book: book,
+                workId: widget.workId,
+                title: book?.title ?? widget.title ?? work.title,
+              ),
               const SizedBox(height: AppSpacing.l),
               Reveal(index: 1, child: _shelfControl(work, book)),
               if (work.description != null) ...[
@@ -216,7 +229,7 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
     final choice = await showBookStatusSheet(
       context,
       current: entry?.status,
-      title: book?.title ?? work.title,
+      title: book?.title ?? widget.title ?? work.title,
     );
     if (!mounted || choice == null) return;
     switch (choice) {
@@ -430,7 +443,14 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
 }
 
 class _Header extends ConsumerWidget {
-  const _Header({required this.work, required this.book, required this.workId});
+  const _Header({
+    required this.work,
+    required this.book,
+    required this.workId,
+    required this.title,
+  });
+
+  final String title;
 
   final String workId;
   final OpenLibraryWork work;
@@ -475,7 +495,7 @@ class _Header extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(work.title, style: theme.textTheme.headlineMedium),
+              Text(title, style: theme.textTheme.headlineMedium),
               if (book?.author != null) ...[
                 const SizedBox(height: AppSpacing.xs),
                 Text(

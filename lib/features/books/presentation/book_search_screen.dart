@@ -191,7 +191,11 @@ class _BookSearchScreenState extends ConsumerState<BookSearchScreen> {
                           label: 'Buchdetails öffnen: ${book.title}',
                           child: InkWell(
                             onTap: () => context.push(
-                              '/books/${normalizeWorkId(book.openLibraryId)}',
+                              Uri(
+                                path:
+                                    '/books/${normalizeWorkId(book.openLibraryId)}',
+                                queryParameters: {'title': book.title},
+                              ).toString(),
                             ),
                             child: Row(
                               children: [
