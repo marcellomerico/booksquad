@@ -40,7 +40,7 @@ Keine Werbung, kein Tracking, Daten in der EU.
 
 | Bereich | Was die App kann |
 |---|---|
-| **Bücherregal** | Walnuss-Regal mit Buchrücken oder Covern, Fächer „Lese ich“, „Ungelesen“, „Gelesen“ und eine Ecke für Abgebrochenes, eigene Reihenfolge per Ziehen. Suche über Open Library mit Millionen Titeln |
+| **Bücherregal** | Walnuss-Regal mit Buchrücken oder Covern, Fächer „Lese ich“, „Ungelesen“, „Gelesen“ und eine Ecke für Abgebrochenes, eigene Reihenfolge per Ziehen. Suche über Open Library mit Millionen Titeln, deutsche Ausgaben mit deutschem Titel und Cover zuerst |
 | **Lesefortschritt** | Aktuelle Seite pro Buch, Lese-Serie, Jahresziel und Statistik mit Seiten pro Woche, Büchern pro Monat und Lesetage-Kalender |
 | **Wunschliste** | Bücher, die du haben oder lesen möchtest, getrennt vom Regal |
 | **Beiträge** | Rezension, Empfehlung, Diskussion oder Zitat, mit Buch und Foto (Metadaten wie GPS werden entfernt) |
@@ -51,15 +51,18 @@ Keine Werbung, kein Tracking, Daten in der EU.
 | **Darstellung** | Warmer Hell- und Dunkelmodus, Animationen, die „Bewegung reduzieren“ respektieren |
 | **Konto** | E-Mail, Apple- und Google-Login, Passwort zurücksetzen, Konto in der App löschen |
 
-[Teaser-Video ansehen (9:16, 21 s)](site/img/teaser.mp4)
+<div align="center">
+  <a href="https://booksquad.de/#teaser"><img src="site/img/teaser-poster.jpg" width="240" alt="Teaser-Video ansehen (21 Sekunden)"></a><br>
+  <a href="https://booksquad.de/#teaser">Teaser-Video ansehen (21 s)</a>
+</div>
 
 ## Technik
 
-- **App:** Flutter 3.44 (iOS und Android), Riverpod, go_router, Material 3 mit eigenem Theme (Source Serif 4, Bordeaux, Creme und Walnuss, hell und dunkel)
+- **App:** Flutter 3.44 (iOS und Android, iOS-Plugins als Swift Packages ohne CocoaPods), Riverpod, go_router, Material 3 mit eigenem Theme (Source Serif 4, Bordeaux, Creme und Walnuss, hell und dunkel)
 - **Backend:** Supabase (Postgres, Auth, Storage, Realtime, Edge Functions), Region Frankfurt
-- **Sicherheit:** Row Level Security auf allen Tabellen, Hilfsfunktionen im nicht öffentlichen Schema `private`, Rate-Limits per Trigger, Konto-Löschung über eine Edge Function
+- **Sicherheit:** Row Level Security auf allen Tabellen, Hilfsfunktionen im nicht öffentlichen Schema `private`, Rate-Limits per Trigger, Konto-Löschung über eine Edge Function, Beta-Anmeldung mit Bestätigungsmail (Double Opt-in)
 - **Buchdaten:** [Open Library](https://openlibrary.org) (Suche, Cover, Beschreibungen)
-- **Qualität:** über 180 automatisierte Tests, `flutter analyze` ohne Befunde, CI mit Tests und Android-Build bei jedem Push, RLS-Regressionstest und Prüfung aller Abfragen gegen das Backend
+- **Qualität:** rund 190 automatisierte Tests, `flutter analyze` ohne Befunde, CI mit Tests und Android-Build bei jedem Push, RLS-Regressionstest und Prüfung aller Abfragen gegen das Backend
 
 ```
 lib/
@@ -113,4 +116,4 @@ Quellcode und Inhalte sind zur Ansicht veröffentlicht, **alle Rechte vorbehalte
 
 ## Status
 
-In Vorbereitung für den Start im App Store und bei Google Play. Geplante Features stehen als [Issues](https://github.com/marcellomerico/booksquad/issues?q=is%3Aopen+label%3Afeature).
+In Vorbereitung für den Start im App Store und bei Google Play, zuerst in Deutschland, Österreich und der Schweiz. Wer vorab testen möchte, trägt sich auf [booksquad.de](https://booksquad.de/#beta) für die Beta ein. Geplante Features stehen als [Issues](https://github.com/marcellomerico/booksquad/issues?q=is%3Aopen+label%3Afeature).
